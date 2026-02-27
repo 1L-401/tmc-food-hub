@@ -10,7 +10,7 @@ function FAQSection() {
 
   useEffect(() => {
     const hashId = location.hash.replace('#', '');
-    
+
     if (hashId) {
       // Open only the FAQ that matches the Quick Link
       setActiveId(hashId);
@@ -51,7 +51,7 @@ function FAQSection() {
             </div>
           </div>
         </div>
-      </div>  
+      </div>
     </section>
   );
 }

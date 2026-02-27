@@ -36,8 +36,8 @@ function Homepage() {
           <ServicesSection />
           <EventsSection />
           <NewsBlogSection isPreview={true} />
-          <TestimonialsSection /> 
-        
+          <TestimonialsSection />
+
           <ContactSection />
           <Footer />
         </main>
