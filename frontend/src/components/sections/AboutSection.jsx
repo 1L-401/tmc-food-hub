@@ -1,4 +1,4 @@
-import aboutUsImage from "../../assets/home/aboutus.png";
+import aboutUsImage from "../../assets/home/about_us_image.png";
 
 /**
  * Displays company mission, vision, and about information.
@@ -13,15 +13,7 @@ function AboutSection() {
         paddingBottom: '50px'
       }}
     >
-      <style>{`
-        @keyframes flowDotsAbout {
-          from { stroke-dashoffset: 40; }
-          to { stroke-dashoffset: 0; }
-        }
-        .flowing-dots-about {
-          animation: flowDotsAbout 1.5s linear infinite;
-        }
-      `}</style>
+
       <div className="container">
         {/* Top Content Row: Image on left, Text on right */}
         <div className="row align-items-center mb-5">
@@ -29,35 +21,7 @@ function AboutSection() {
           <div className="col-md-6 mb-4 mb-md-0" data-aos="fade-right">
             <div className="img-wrap position-relative">
 
-              {/* Animated Dotted Arc Background */}
-              <div
-                className="position-absolute"
-                style={{
-                  top: '-40px',
-                  right: '-30px',
-                  width: '120%',
-                  height: '120%',
-                  zIndex: -1,
-                  opacity: 0.6
-                }}
-              >
-                <svg
-                  viewBox="0 0 400 400"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="w-100 h-100"
-                  preserveAspectRatio="xMidYMid slice"
-                >
-                  <path
-                    className="flowing-dots-about"
-                    d="M 50 350 Q 200 -50 400 250"
-                    stroke="#215C5C"
-                    strokeWidth="3"
-                    strokeDasharray="12 12"
-                    fill="transparent"
-                  />
-                </svg>
-              </div>
+
 
               <img
                 className="img-fluid rounded-4 w-100 object-fit-cover shadow-sm"
