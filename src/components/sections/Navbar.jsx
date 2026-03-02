@@ -143,50 +143,10 @@ function Navbar() {
         </Link>
 
         <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav ms-auto align-items-center gap-2">
+          <ul className="navbar-nav ms-auto align-items-center">
             {renderNavItems()}
-            <li className="nav-item ms-lg-3 d-flex align-items-center gap-3">
-              {/* Login Button */}
-              <button
-                className={`btn fw-bold px-4 ${isDarkMode ? 'btn-outline-light' : 'btn-outline-dark'}`}
-                style={{ borderRadius: '8px' }}
-              >
-                Login
-              </button>
-
-              {/* Sign Up Button */}
-              <button
-                className="btn text-white fw-bold px-4"
-                style={{ backgroundColor: 'var(--bs-primary)', borderRadius: '8px' }}
-              >
-                Sign up
-              </button>
-
-              {/* Cart Button */}
-              <button
-                className="btn position-relative ms-2 d-flex align-items-center justify-content-center"
-                style={{
-                  backgroundColor: '#F5A623',
-                  color: 'white',
-                  borderRadius: '10px',
-                  width: '45px',
-                  height: '45px',
-                  border: 'none'
-                }}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" className="bi bi-cart3" viewBox="0 0 16 16">
-                  <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l.84 4.479 9.144-.459L13.89 4H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
-                </svg>
-                <span
-                  className="position-absolute translate-middle badge rounded-pill bg-dark"
-                  style={{ top: '5px', right: '-15px', border: '2px solid white', fontSize: '0.75rem' }}
-                >
-                  2
-                </span>
-              </button>
-
-              {/* Theme Toggle */}
-              <button className="btn-mode d-flex align-items-center justify-content-center ms-2" onClick={toggleTheme} style={{ width: '40px', height: '40px', padding: '0', borderRadius: '50%' }}>
+            <li className="nav-item ms-lg-3">
+              <button className="btn-mode d-flex align-items-center justify-content-center" onClick={toggleTheme} style={{ width: '40px', height: '40px', padding: '0', borderRadius: '50%' }}>
                 {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
               </button>
             </li>
