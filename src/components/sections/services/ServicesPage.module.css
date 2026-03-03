@@ -90,7 +90,8 @@
 
 .trustButton:hover {
   color: #ffffff;
-  background: var(--bs-primary-hover);
+  background: var(--bs-primary);
+  filter: brightness(0.85);
   transform: translateY(-2px);
 }
 
@@ -199,10 +200,9 @@
 }
 
 .ctaButton:hover {
-  color: var(--bs-primary);
-  background: #ffffff;
-  transform: translateY(-2px);
-  box-shadow: 0 12px 28px rgba(16, 24, 40, 0.2);
+  color: #ffffff;
+  background: var(--bs-primary);
+  border: 1px solid #ffffff;
 }
 
 @media (max-width: 991.98px) {

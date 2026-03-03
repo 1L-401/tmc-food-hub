@@ -5,11 +5,13 @@
     color: var(--bs-body-color);
     font-family: 'Bricolage Grotesque', sans-serif;
 }
+
 .cea-container-narrow {
     max-width: 1140px;
     margin: 0 auto;
     padding: 0 20px;
 }
+
 /* Breadcrumbs */
 .cea-breadcrumbs {
     font-size: 13px;
@@ -76,17 +78,17 @@
     width: 44px;
     height: 44px;
     border-radius: 50%;
-    background-color: #ffffff !important; 
+    background-color: #ffffff !important;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    border: 1px solid #eeeeee; 
+    border: 1px solid #eeeeee;
     overflow: hidden;
 }
 
 .cea-publisher-logo {
-    max-width: 75%; 
+    max-width: 75%;
     max-height: 75%;
     object-fit: contain;
 }
@@ -117,18 +119,19 @@
     justify-content: center;
     transition: 0.2s;
 }
+
 .action-btn.dark-mode img {
-  filter: invert(1);
+    filter: invert(1);
 }
 
 .action-btn svg {
-  width: 20px;
-  height: 20px;
-  transition: filter 0.3s ease;
+    width: 20px;
+    height: 20px;
+    transition: filter 0.3s ease;
 }
 
 .action-btn.dark-mode svg {
-  filter: invert(1);
+    filter: invert(1);
 }
 
 .cea-btn-icon:hover {
@@ -197,10 +200,12 @@
     line-height: 1.85;
     color: var(--bs-body-color);
     margin-bottom: 25px;
+    white-space: pre-wrap;
 }
 
 /* ----------------------- Print Styles ----------------------- */
 @media print {
+
     /* Hide buttons and dropdowns in print */
     .cea-publisher-block .d-flex.gap-2,
     .cea-btn-icon,
@@ -210,7 +215,9 @@
     }
 
     /* Ensure article content fills page */
-    body, .site-wrap, .cea-container-narrow {
+    body,
+    .site-wrap,
+    .cea-container-narrow {
         margin: 0;
         padding: 0;
         width: 100%;

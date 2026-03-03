@@ -278,10 +278,6 @@
      color: var(--bs-primary) !important;
  }
 
- .special-link:hover span:last-child {
-     letter-spacing: 0.3px;
- }
-
  /* --- UTILS & INFO LIST --- */
  .cea-event-details {
      background: rgba(0, 0, 0, 0.02);

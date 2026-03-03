@@ -172,5 +172,32 @@
         "content": "The next phase focuses on scaling innovation and service quality."
       }
     ]
+  },
+  {
+    "id": "scheduled-delivery-feature",
+    "type": "announcement",
+    "path": "Home / Events & Announcement / Scheduled Delivery Feature Now Live",
+    "categoryTag": "NEW FEATURE",
+    "title": "Scheduled Delivery Feature Now Live",
+    "author": "TMC Editorial Team",
+    "date": "February 10, 2026",
+    "readTime": "3 min read",
+    "summary": "The Scheduled Delivery Feature, effective February 10, 2026, allows customers to order meals up to 7 days in advance, combining convenience with precise planning for both individual and corporate users. It includes set-and-forget ordering, planning all weekly meals in one session, and ensuring vital meals arrive on time, while also supporting seamless corporate catering. Users simply select meals, choose a delivery date and time at checkout, and receive notifications when their order is en route. The platform manages ordering systematically to ensure peak freshness and integrates with Google and Outlook calendars for automated reminders. It is free for all customers and available from all partner restaurants.",
+    "image": "/assets/images/scheduled_platform_article.png",
+    "takeaways": [
+      "Advance ordering available for all partner restaurants starting today.",
+      "Integration with Google and Outlook calendars for automated reminders.",
+      "Corporate accounts enable team announcement link views for multi-order tracking."
+    ],
+    "sections": [
+      {
+        "h2": "Why Scheduled Delivery Matters",
+        "content": "In the fast-paced world of restaurant logistics, timing is everything. While instant delivery caters to immediate cravings, many customers—particularly corporate clients and busy families—need the assurance of a planned meal.\n\n• Ultimate Convenience: Set it and forget it. Perfect for recurring team meetings.\n• Friday Mornings: Order catering for the entire week in one session.\n• Reduced Peak Traffic: Helps kitchens prepare for large orders during off-peak hours.\n• Corporate Catering: Seamless integration for all catered planners."
+      },
+      {
+        "h2": "How It Works",
+        "content": "1. Select Meals: Choose your favorite dishes and add them to your cart as usual.\n2. Pick a Time: At checkout, select \"Schedule\" and choose a date up to 7 days away.\n3. Relax: We'll handle the rest and notify you when your meal is en route.\n\nOur platform intelligently manages kitchen queues to prioritize these scheduled orders, ensuring that the preparation starts precisely at the right time to maintain peak freshness upon arrival."
+      }
+    ]
   }
 ]

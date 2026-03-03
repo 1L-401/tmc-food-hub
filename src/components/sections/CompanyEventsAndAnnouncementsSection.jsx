@@ -74,7 +74,7 @@ const CompanyEventsAndAnnouncementsSection = () => {
         <div className="cea-spacer"></div>
 
         {/* --- ANNOUNCEMENTS --- */}
-        <div className="cea-bg-mint" data-aos="fade-up">
+        <div className="mb-5" data-aos="fade-up">
           <h2 className="cea-section-heading mb-5">Announcements</h2>
           <div className="row g-4 justify-content-center">
             <div className="col-md-5">
@@ -119,7 +119,7 @@ const CompanyEventsAndAnnouncementsSection = () => {
             <div className="col-md-5">
               <div className="cea-white-card shadow-sm">
                 <img
-                  src="/assets/images/scheduled_platform_thumbnail.png"
+                  src="/assets/images/scheduled_platform_article.png"
                   className="cea-card-img"
                   alt="Scheduled Delivery Feature"
                 />
@@ -160,7 +160,7 @@ const CompanyEventsAndAnnouncementsSection = () => {
         <div className="cea-spacer"></div>
 
         {/* --- COMPANY EVENTS --- */}
-        <div className="cea-bg-warm" data-aos="fade-up">
+        <div className="mb-5" data-aos="fade-up">
           <h2 className="cea-section-heading mb-5">Company Events</h2>
           <div className="cea-white-card mb-4 shadow-sm">
             <img
