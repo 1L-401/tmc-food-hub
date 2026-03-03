@@ -1,4 +1,4 @@
-import aboutUsImage from "../../assets/home/about_us_image.png";
+import aboutUsImage from "../../assets/home/about_us_image.webp";
 
 /**
  * Displays company mission, vision, and about information.

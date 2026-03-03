@@ -31,7 +31,7 @@ const CompanyEventsAndAnnouncementsSection = () => {
           <div className="row g-0 align-items-center">
             <div className="col-lg-6 order-1 order-lg-2">
               <img
-                src="/assets/images/tmc_foodhub_platformm.png"
+                src="/assets/images/tmc_foodhub_platformm.webp"
                 alt="TMC Foodhub Platform Demo"
                 className="cea-featured-img"
               />
@@ -80,9 +80,10 @@ const CompanyEventsAndAnnouncementsSection = () => {
             <div className="col-md-5">
               <div className="cea-white-card shadow-sm">
                 <img
-                  src="/assets/images/scheduled_platform_thumbnail.png"
+                  src="/assets/images/scheduled_platform_thumbnail.webp"
                   className="cea-card-img"
                   alt="Platform Maintenance"
+                  loading="lazy"
                 />
                 <div className="cea-card-body-long">
                   <span className="cea-badge-small">SCHEDULED MAINTENANCE</span>
@@ -119,9 +120,10 @@ const CompanyEventsAndAnnouncementsSection = () => {
             <div className="col-md-5">
               <div className="cea-white-card shadow-sm">
                 <img
-                  src="/assets/images/scheduled_platform_article.png"
+                  src="/assets/images/scheduled_platform_article.webp"
                   className="cea-card-img"
                   alt="Scheduled Delivery Feature"
+                  loading="lazy"
                 />
                 <div className="cea-card-body-long">
                   <span className="cea-badge-small">NEW FEATURE</span>
@@ -164,9 +166,10 @@ const CompanyEventsAndAnnouncementsSection = () => {
           <h2 className="cea-section-heading mb-5">Company Events</h2>
           <div className="cea-white-card mb-4 shadow-sm">
             <img
-              src="/assets/images/tmc_foodhub_platformm.png"
+              src="/assets/images/tmc_foodhub_platformm.webp"
               className="cea-event-img-large"
               alt="TMC Foodhub Platform Demo"
+              loading="lazy"
             />
             <div className="cea-card-body">
               <span className="cea-badge-small">UPCOMING EVENT</span>
