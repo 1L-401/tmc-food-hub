@@ -1,4 +1,4 @@
-import heroImage from "../../assets/home/main_hero.png"
+import heroImage from "../../assets/home/main_hero.webp"
 
 /**
  * Main hero banner with headline, description, and call-to-action buttons.

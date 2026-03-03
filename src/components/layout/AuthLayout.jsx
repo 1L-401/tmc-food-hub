@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ThemeContext } from '../../components/ui/ThemeContext';
 import styles from '../../pages/AuthPages.module.css';
-import heroImage from '../../assets/home/main_hero.png';
+import heroImage from '../../assets/home/main_hero.webp';
 
 const AuthLayout = ({ children, heroSubtitle }) => {
     const { isDarkMode } = useContext(ThemeContext);

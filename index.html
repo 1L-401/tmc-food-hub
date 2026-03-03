@@ -1,63 +1,78 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="/assets/images/TMClogo.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- ======= Google Font =======-->
-   <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/png" href="/assets/images/TMClogo.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Bricolage+Grotesque:wght@600;700;800&display=swap" rel="stylesheet">
+  <!-- ======= Preload Critical Images =======-->
+  <link rel="preload" as="image" href="/src/assets/home/main_hero.webp" />
+  <link rel="preload" as="image" href="/src/assets/home/aboutus.webp" />
 
-    <!-- End Google Font-->
+  <!-- User Requested Preloads (Platform & Menu) -->
+  <link rel="preload" as="image" href="/assets/images/scheduled_platform_thumbnail.webp" />
+  <link rel="preload" as="image" href="/assets/images/scheduled_platform_article.webp" />
+  <link rel="preload" as="image" href="/assets/images/tmc_foodhub_platformm.webp" />
+  <link rel="preload" as="image" href="/assets/images/services.webp" />
+  <link rel="preload" as="image" href="/assets/images/service/burger.webp" />
+  <link rel="preload" as="image" href="/assets/images/service/fries.webp" />
+  <link rel="preload" as="image" href="/assets/images/service/juice.webp" />
+  <link rel="preload" as="image" href="/assets/images/service/spag.webp" />
+  <link rel="preload" as="image" href="/assets/images/service/steak.webp" />
+  <link rel="preload" as="image" href="/assets/images/service/sushi.webp" />
 
-    <!-- ======= Styles =======-->
-    <link href="/assets/vendors/bootstrap/bootstrap.min.css" rel="stylesheet" />
-    <link
-      href="/assets/vendors/bootstrap-icons/font/bootstrap-icons.min.css"
-      rel="stylesheet"
-    />
-    <link href="/assets/vendors/glightbox/glightbox.min.css" rel="stylesheet" />
-    <link href="/assets/vendors/swiper/swiper-bundle.min.css" rel="stylesheet" />
-    <link href="/assets/vendors/aos/aos.css" rel="stylesheet" />
-    <!-- End Styles-->
+  <!-- ======= Google Font =======-->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <!-- ======= Theme Style =======-->
-    <link href="/assets/css/style.css" rel="stylesheet" />
-    <!-- End Theme Style-->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Bricolage+Grotesque:wght@600;700;800&display=swap"
+    rel="stylesheet">
 
-    <!-- ======= Apply theme =======-->
-    <script>
-      // Apply the theme as early as possible to avoid flicker
-      (function () {
-        const storedTheme = localStorage.getItem("theme") || "light";
-        document.documentElement.setAttribute("data-bs-theme", storedTheme);
-      })();
-    </script>
+  <!-- End Google Font-->
 
-    <title>TMC Foodhub</title>
-    <meta 
-      name="description" 
-      content="AVAA is a resource management platform that helps clients find the right 
+  <!-- ======= Styles =======-->
+  <link href="/assets/vendors/bootstrap/bootstrap.min.css" rel="stylesheet" />
+  <link href="/assets/vendors/bootstrap-icons/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <link href="/assets/vendors/glightbox/glightbox.min.css" rel="stylesheet" />
+  <link href="/assets/vendors/swiper/swiper-bundle.min.css" rel="stylesheet" />
+  <link href="/assets/vendors/aos/aos.css" rel="stylesheet" />
+  <!-- End Styles-->
+
+  <!-- ======= Theme Style =======-->
+  <link href="/assets/css/style.css" rel="stylesheet" />
+  <!-- End Theme Style-->
+
+  <!-- ======= Apply theme =======-->
+  <script>
+    // Apply the theme as early as possible to avoid flicker
+    (function () {
+      const storedTheme = localStorage.getItem("theme") || "light";
+      document.documentElement.setAttribute("data-bs-theme", storedTheme);
+    })();
+  </script>
+
+  <title>TMC Foodhub</title>
+  <meta name="description" content="AVAA is a resource management platform that helps clients find the right 
       people to work with through structured talent profiles, advanced filtering, and a 
-      centralized platform."
-    >
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-    <!-- ======= Javascripts =======-->
-    <script src="/assets/vendors/bootstrap/bootstrap.bundle.min.js"></script>
-    <script src="/assets/vendors/gsap/gsap.min.js"></script>
-    <script src="/assets/vendors/imagesloaded/imagesloaded.pkgd.min.js"></script>
-    <script src="/assets/vendors/isotope/isotope.pkgd.min.js"></script>
-    <script src="/assets/vendors/glightbox/glightbox.min.js"></script>
-    <script src="/assets/vendors/swiper/swiper-bundle.min.js"></script>
-    <script src="/assets/vendors/aos/aos.js"></script>
-    <script src="/assets/vendors/purecounter/purecounter.js"></script>
-    <script src="/assets/js/custom.js"></script>
-    <!-- End JavaScripts-->
-  </body>
+      centralized platform.">
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.jsx"></script>
+  <!-- ======= Javascripts =======-->
+  <script src="/assets/vendors/bootstrap/bootstrap.bundle.min.js"></script>
+  <script src="/assets/vendors/gsap/gsap.min.js"></script>
+  <script src="/assets/vendors/imagesloaded/imagesloaded.pkgd.min.js"></script>
+  <script src="/assets/vendors/isotope/isotope.pkgd.min.js"></script>
+  <script src="/assets/vendors/glightbox/glightbox.min.js"></script>
+  <script src="/assets/vendors/swiper/swiper-bundle.min.js"></script>
+  <script src="/assets/vendors/aos/aos.js"></script>
+  <script src="/assets/vendors/purecounter/purecounter.js"></script>
+  <script src="/assets/js/custom.js"></script>
+  <!-- End JavaScripts-->
+</body>
+
 </html>

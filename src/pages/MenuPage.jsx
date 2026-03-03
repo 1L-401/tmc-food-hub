@@ -13,7 +13,7 @@ const menuItems = [
         id: 1,
         title: 'French Fries',
         description: 'Crispy golden potato fries, lightly salted and perfect for a quick snack.',
-        image: '/assets/images/service/fries.png',
+        image: '/assets/images/service/fries.webp',
         price: 4.00,
         rating: 4.8,
         isBestSeller: true
@@ -22,7 +22,7 @@ const menuItems = [
         id: 2,
         title: 'Spaghetti',
         description: 'Al dente pasta tossed in a rich, slow-cooked meat sauce.',
-        image: '/assets/images/service/spag.png',
+        image: '/assets/images/service/spag.webp',
         price: 6.50,
         rating: 3.9,
         isBestSeller: false
@@ -31,7 +31,7 @@ const menuItems = [
         id: 3,
         title: 'Burger',
         description: 'A classic juicy beef patty layered with cheese and fresh veggies.',
-        image: '/assets/images/service/burger.png',
+        image: '/assets/images/service/burger.webp',
         price: 7.00,
         rating: 4.9,
         isBestSeller: false
@@ -40,7 +40,7 @@ const menuItems = [
         id: 4,
         title: 'Black Iced Coffee',
         description: 'Bold, smooth brewed coffee served ice-cold for a refreshing boost.',
-        image: '/assets/images/service/juice.png',
+        image: '/assets/images/service/juice.webp',
         price: 3.00,
         rating: 4.4,
         isBestSeller: false
@@ -49,7 +49,7 @@ const menuItems = [
         id: 5,
         title: 'Sushi',
         description: 'Freshly prepared rolls with seasoned rice and premium ingredients.',
-        image: '/assets/images/service/sushi.png',
+        image: '/assets/images/service/sushi.webp',
         price: 8.00,
         rating: 4.1,
         isBestSeller: false
@@ -58,7 +58,7 @@ const menuItems = [
         id: 6,
         title: 'Grilled Steak',
         description: 'Juicy, flame-grilled steak cooked to perfection with savory spices.',
-        image: '/assets/images/service/steak.png',
+        image: '/assets/images/service/steak.webp',
         price: 12.00,
         rating: 4.5,
         isBestSeller: false
@@ -179,7 +179,7 @@ function MenuPage() {
                                         <div className="col-md-6 col-lg-4" key={item.id}>
                                             <div className={styles.productCard}>
                                                 <div className={styles.cardImageWrapper}>
-                                                    <img src={item.image} alt={item.title} className={styles.cardImage} />
+                                                    <img src={item.image} alt={item.title} className={styles.cardImage} loading="lazy" />
                                                     {item.isBestSeller && (
                                                         <span className={styles.badgeOverlay}>Best Seller</span>
                                                     )}

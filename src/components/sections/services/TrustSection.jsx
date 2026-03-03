@@ -34,9 +34,10 @@ function TrustSection() {
           <div className="col-lg-6">
             <div className={styles.trustImageWrap}>
               <img
-                src="/assets/images/services.png"
+                src="/assets/images/services.webp"
                 alt="Restaurant team working with TMC Foodhub"
                 className={styles.trustImage}
+                loading="lazy"
               />
               <div className={styles.testimonialOverlay}>
                 <p className={styles.testimonialText}>
