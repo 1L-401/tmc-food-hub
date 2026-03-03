@@ -1,4 +1,4 @@
-import heroImage from "../../assets/home/main_hero.webp"
+
 
 /**
  * Main hero banner with headline, description, and call-to-action buttons.
@@ -69,7 +69,7 @@ function HeroSection() {
               <div className="hero-img">
                 <img
                   className="img-main img-fluid rounded-4 w-100"
-                  src={heroImage}
+                  src="/assets/images/home/main_hero.webp"
                   alt="TMC Food Hub Hero"
                   data-aos="fade-left"
                   data-aos-delay="400"
