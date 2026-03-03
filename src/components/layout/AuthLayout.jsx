@@ -2,7 +2,6 @@ import React, { useContext } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ThemeContext } from '../../components/ui/ThemeContext';
 import styles from '../../pages/AuthPages.module.css';
-import heroImage from '../../assets/home/main_hero.webp';
 
 const AuthLayout = ({ children, heroSubtitle }) => {
     const { isDarkMode } = useContext(ThemeContext);
@@ -15,7 +14,7 @@ const AuthLayout = ({ children, heroSubtitle }) => {
                 <div className="col-lg-6 d-none d-lg-block position-relative">
                     <div className={styles.imageBackgroundWrapper}>
                         <img
-                            src={heroImage}
+                            src="/assets/images/home/main_hero.webp"
                             alt="TMC Food Hub Kitchen"
                             className={styles.coverImage}
                         />

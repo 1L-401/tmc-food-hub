@@ -1,4 +1,4 @@
-import aboutUsImage from "../../assets/home/about_us_image.webp";
+
 
 /**
  * Displays company mission, vision, and about information.
@@ -26,7 +26,7 @@ function AboutSection() {
               <img
                 className="img-fluid rounded-4 w-100 object-fit-cover shadow-sm"
                 style={{ maxHeight: '450px', position: 'relative', zIndex: 1 }}
-                src={aboutUsImage}
+                src="/assets/images/home/about_us_image.webp"
                 alt="About TMC Food Hub"
               />
             </div>
