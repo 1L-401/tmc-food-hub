@@ -15,6 +15,7 @@ import CheckoutPage from './pages/CheckoutPage';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import OrderTrackingPage from './pages/OrderTrackingPage';
 function App() {
   const { pathname } = useLocation();
 
@@ -50,6 +51,7 @@ function App() {
         <Route path="/menu" element={<MenuPage />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/checkout" element={<CheckoutPage />} />
+        <Route path="/order-tracking" element={<OrderTrackingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />

@@ -571,3 +571,151 @@
 .dark-mode [class*="checkoutPage"] [class*="termsText"] {
     color: #6B7280 !important;
 }
+
+/* ---------- ORDER TRACKING PAGE ---------- */
+.dark-mode [class*="orderTrackingPage"] [class*="title"] {
+    color: #F3F4F6 !important;
+}
+
+.dark-mode [class*="orderTrackingPage"] [class*="subtitle"] {
+    background-color: transparent !important;
+    color: #9CA3AF !important;
+}
+
+.dark-mode [class*="orderTrackingPage"] [class*="breadcrumbs"] a {
+    color: #9CA3AF !important;
+}
+
+.dark-mode [class*="orderTrackingPage"] [class*="current"] {
+    color: #F87171 !important;
+}
+
+/* Map card */
+.dark-mode [class*="mapCard"] {
+    background-color: #1F2937 !important;
+    border-color: #374151 !important;
+}
+
+.dark-mode [class*="arrivalBadge"] {
+    background-color: #1F2937 !important;
+    border-color: #374151 !important;
+}
+
+.dark-mode [class*="arrivalTitle"] {
+    color: #F3F4F6 !important;
+}
+
+.dark-mode [class*="arrivalSub"] {
+    color: #9CA3AF !important;
+}
+
+/* Order Summary card */
+.dark-mode [class*="orderTrackingPage"] [class*="summaryCard"] {
+    background-color: #1F2937 !important;
+    border-color: #374151 !important;
+}
+
+.dark-mode [class*="orderTrackingPage"] [class*="summaryTitle"],
+.dark-mode [class*="orderTrackingPage"] [class*="summaryItemName"],
+.dark-mode [class*="orderTrackingPage"] [class*="totalLabel"],
+.dark-mode [class*="orderTrackingPage"] [class*="restaurantName"] {
+    color: #F3F4F6 !important;
+}
+
+.dark-mode [class*="orderTrackingPage"] [class*="summaryRow"],
+.dark-mode [class*="orderTrackingPage"] [class*="summaryItemMeta"] {
+    color: #9CA3AF !important;
+}
+
+.dark-mode [class*="orderTrackingPage"] [class*="summaryItems"],
+.dark-mode [class*="orderTrackingPage"] [class*="summaryBreakdown"] {
+    border-color: #374151 !important;
+}
+
+.dark-mode [class*="orderTrackingPage"] [class*="totalValue"] {
+    color: #F87171 !important;
+}
+
+/* Status card */
+.dark-mode [class*="statusCard"] {
+    background-color: #1F2937 !important;
+    border-color: #374151 !important;
+}
+
+.dark-mode [class*="statusCardTitle"] {
+    color: #F3F4F6 !important;
+}
+
+.dark-mode [class*="timelineLabel"] {
+    color: #F3F4F6 !important;
+}
+
+.dark-mode [class*="timelineDesc"],
+.dark-mode [class*="timelineTime"] {
+    color: #9CA3AF !important;
+}
+
+.dark-mode [class*="statusPending"] {
+    background-color: #374151 !important;
+    color: #6B7280 !important;
+}
+
+.dark-mode [class*="timelineStep"]:not(:last-child)::after {
+    background-color: #4B5563 !important;
+}
+
+.dark-mode [class*="timelineCompleted"]:not(:last-child)::after {
+    background-color: #16a34a !important;
+}
+
+/* Rider card */
+.dark-mode [class*="riderCard"] {
+    background-color: #1F2937 !important;
+    border-color: #374151 !important;
+}
+
+.dark-mode [class*="riderName"] {
+    color: #F3F4F6 !important;
+}
+
+.dark-mode [class*="riderMeta"] {
+    color: #9CA3AF !important;
+}
+
+.dark-mode [class*="callBtnOutline"] {
+    background-color: #374151 !important;
+    border-color: #4B5563 !important;
+    color: #D1D5DB !important;
+}
+
+.dark-mode [class*="callBtnOutline"]:hover {
+    border-color: #F87171 !important;
+    color: #F87171 !important;
+}
+
+.dark-mode [class*="cancelBtn"] {
+    background-color: #374151 !important;
+    border-color: #4B5563 !important;
+    color: #D1D5DB !important;
+}
+
+.dark-mode [class*="cancelBtn"]:hover:not(:disabled) {
+    border-color: #F87171 !important;
+    color: #F87171 !important;
+}
+
+.dark-mode [class*="cancelTimer"] {
+    color: #6B7280 !important;
+}
+
+.dark-mode [class*="riderDivider"] {
+    background-color: #374151 !important;
+}
+
+.dark-mode [class*="supportText"] {
+    color: #6B7280 !important;
+}
+
+.dark-mode [class*="supportLink"] {
+    color: #F87171 !important;
+}
