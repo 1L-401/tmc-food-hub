@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
 import AuthLayout from '../components/layout/AuthLayout';
+import { useAuth } from '../context/AuthContext';
 import styles from './AuthPages.module.css';
 
 function LoginPage() {
@@ -9,10 +10,14 @@ function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errors, setErrors] = useState({ email: '', password: '' });
+    const [isLoading, setIsLoading] = useState(false);
+
+    const { login } = useAuth();
+    const navigate = useNavigate();
 
     const togglePassword = () => setShowPassword(!showPassword);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         let newErrors = { email: '', password: '' };
@@ -23,17 +28,23 @@ function LoginPage() {
             hasError = true;
         }
 
-        // Mock fail condition
-        if (!password || password !== 'demopassword') {
-            newErrors.password = 'Incorrect password.';
+        if (!password) {
+            newErrors.password = 'Please enter your password.';
             hasError = true;
         }
 
         setErrors(newErrors);
+        if (hasError) return;
 
-        if (!hasError) {
-            console.log('Login attempt success:', { email, password });
-            // Handle actual authentication logic here
+        setIsLoading(true);
+        try {
+            await login(email, password);
+            navigate('/');
+        } catch (err) {
+            const message = err.response?.data?.message || 'Login failed. Please try again.';
+            setErrors({ email: message, password: '' });
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -100,8 +111,8 @@ function LoginPage() {
                         </Link>
                     </div>
 
-                    <button type="submit" className={styles.submitBtn}>
-                        Login
+                    <button type="submit" className={styles.submitBtn} disabled={isLoading}>
+                        {isLoading ? 'Logging in...' : 'Login'}
                     </button>
                 </form>
 
