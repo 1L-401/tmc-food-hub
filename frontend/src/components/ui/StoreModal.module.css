@@ -242,6 +242,72 @@
     border-radius: 4px;
 }
 
+/* ── Menu category chips ── */
+.menuCatRow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.menuCatChip {
+    padding: 0.4rem 1rem;
+    border-radius: 999px;
+    border: 1.5px solid #E5E7EB;
+    background: #fff;
+    color: #374151;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    white-space: nowrap;
+}
+
+.menuCatChip:hover {
+    border-color: #991B1B;
+    color: #991B1B;
+}
+
+.menuCatChipActive {
+    background: #991B1B;
+    border-color: #991B1B;
+    color: #fff;
+}
+
+.menuCatChipActive:hover {
+    color: #fff;
+}
+
+/* ── Menu section (category group in All view) ── */
+.menuSection {
+    margin-bottom: 2.5rem;
+}
+
+.menuCatTitle {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #111827;
+    margin: 0 0 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #F3F4F6;
+    letter-spacing: -0.2px;
+}
+
+/* ── Item detail category badge ── */
+.itemDetailCatTag {
+    display: inline-block;
+    padding: 0.25rem 0.85rem;
+    background: #FEF2F2;
+    color: #991B1B;
+    border: 1px solid #FECACA;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.4rem;
+}
+
 /* ── Menu grid ── */
 .menuGrid {
     display: grid;

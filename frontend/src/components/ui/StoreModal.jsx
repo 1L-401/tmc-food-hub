@@ -16,7 +16,7 @@ function StarRow({ rating, size = 14 }) {
     );
 }
 
-/* ── Item detail panel shown when a menu card is clicked ── */
+/* ── Item detail panel ── */
 function ItemDetail({ item, onBack, onAddToCart }) {
     return (
         <div className={styles.itemDetail}>
@@ -25,6 +25,7 @@ function ItemDetail({ item, onBack, onAddToCart }) {
             </button>
             <img src={item.image} alt={item.title} className={styles.itemDetailImg} />
             <div className={styles.itemDetailBody}>
+                <div className={styles.itemDetailCatTag}>{item.category}</div>
                 <h3 className={styles.itemDetailName}>{item.title}</h3>
                 <p className={styles.itemDetailDesc}>{item.description}</p>
                 <div className={styles.itemDetailMeta}>
@@ -47,13 +48,23 @@ function StoreModal({ store, onClose }) {
     const [activeTab, setActiveTab] = useState('menu');
     const [selectedItem, setSelectedItem] = useState(null);
 
+    // Build unique category list from menu items
+    const allCategories = ['All', ...new Set(store.menuItems.map(i => i.category))];
+    const [activeMenuCat, setActiveMenuCat] = useState('All');
+
+    const visibleItems = activeMenuCat === 'All'
+        ? store.menuItems
+        : store.menuItems.filter(i => i.category === activeMenuCat);
+
     useEffect(() => {
         document.body.style.overflow = 'hidden';
         return () => { document.body.style.overflow = ''; };
     }, []);
 
     useEffect(() => {
-        const handler = (e) => { if (e.key === 'Escape') { selectedItem ? setSelectedItem(null) : onClose(); } };
+        const handler = (e) => {
+            if (e.key === 'Escape') { selectedItem ? setSelectedItem(null) : onClose(); }
+        };
         window.addEventListener('keydown', handler);
         return () => window.removeEventListener('keydown', handler);
     }, [onClose, selectedItem]);
@@ -71,7 +82,7 @@ function StoreModal({ store, onClose }) {
         <div className={styles.backdrop} onClick={onClose}>
             <div className={styles.modal} onClick={e => e.stopPropagation()}>
 
-                {/* ── Brand banner ── */}
+                {/* ── Banner ── */}
                 <div className={styles.banner} style={{ background: store.brandColor }}>
                     <div className={styles.bannerOverlay} />
                     <img src={store.logo} alt={store.name} className={styles.storeLogo} />
@@ -82,27 +93,25 @@ function StoreModal({ store, onClose }) {
 
                 {/* ── Store identity ── */}
                 <div className={styles.storeIdentity}>
-                    <div style={{ flex: 1 }}>
-                        <h2 className={styles.storeName}>{store.name}</h2>
-                        <p className={styles.storeBranch}>{store.branchName}</p>
-                        <p className={styles.storeCuisine}>{store.cuisine}</p>
-                        <div className={styles.metaRow}>
-                            <span className={styles.metaChip}><MapPin size={12} /> {store.location}</span>
-                            <span className={styles.metaChip}><Clock size={12} /> {store.hours}</span>
-                            <span className={styles.metaChip}><Phone size={12} /> {store.phone}</span>
-                        </div>
-                        <div className={styles.ratingRow}>
-                            <StarRow rating={avgRating} size={14} />
-                            <span className={styles.ratingNum}>{avgRating}</span>
-                            <span className={styles.ratingCount}>({store.reviews.length} reviews)</span>
-                            <span className={store.status === 'Operational' ? styles.statusOpen : styles.statusClosed}>
-                                ● {store.status}
-                            </span>
-                        </div>
+                    <h2 className={styles.storeName}>{store.name}</h2>
+                    <p className={styles.storeBranch}>{store.branchName}</p>
+                    <p className={styles.storeCuisine}>{store.cuisine}</p>
+                    <div className={styles.metaRow}>
+                        <span className={styles.metaChip}><MapPin size={12} /> {store.location}</span>
+                        <span className={styles.metaChip}><Clock size={12} /> {store.hours}</span>
+                        <span className={styles.metaChip}><Phone size={12} /> {store.phone}</span>
+                    </div>
+                    <div className={styles.ratingRow}>
+                        <StarRow rating={avgRating} size={14} />
+                        <span className={styles.ratingNum}>{avgRating}</span>
+                        <span className={styles.ratingCount}>({store.reviews.length} reviews)</span>
+                        <span className={store.status === 'Operational' ? styles.statusOpen : styles.statusClosed}>
+                            ● {store.status}
+                        </span>
                     </div>
                 </div>
 
-                {/* ── Tabs ── */}
+                {/* ── Main tabs ── */}
                 <div className={styles.tabs}>
                     {['menu', 'reviews', 'info'].map(tab => (
                         <button
@@ -128,31 +137,48 @@ function StoreModal({ store, onClose }) {
                                 onAddToCart={handleAddToCart}
                             />
                         ) : (
-                            <div className={styles.menuGrid}>
-                                {store.menuItems.map(item => (
-                                    <div
-                                        key={item.id}
-                                        className={styles.menuCard}
-                                        onClick={() => setSelectedItem(item)}
-                                    >
-                                        <img src={item.image} alt={item.title} className={styles.menuCardImg} />
-                                        <div className={styles.menuCardBody}>
-                                            <h4 className={styles.menuCardTitle}>{item.title}</h4>
-                                            <p className={styles.menuCardDesc}>{item.description}</p>
-                                            <div className={styles.menuCardFooter}>
-                                                <span className={styles.menuCardPrice}>${item.price.toFixed(2)}</span>
-                                                <button
-                                                    className={styles.addBtn}
-                                                    onClick={(e) => { e.stopPropagation(); handleAddToCart(item); }}
-                                                    aria-label="Add to cart"
-                                                >
-                                                    <ShoppingCart size={13} /> Add
-                                                </button>
+                            <>
+                                {/* Menu category chips */}
+                                <div className={styles.menuCatRow}>
+                                    {allCategories.map(cat => (
+                                        <button
+                                            key={cat}
+                                            className={`${styles.menuCatChip} ${activeMenuCat === cat ? styles.menuCatChipActive : ''}`}
+                                            onClick={() => setActiveMenuCat(cat)}
+                                        >
+                                            {cat}
+                                        </button>
+                                    ))}
+                                </div>
+
+                                {/* Section header */}
+                                {activeMenuCat !== 'All' && (
+                                    <h3 className={styles.menuCatTitle}>{activeMenuCat}</h3>
+                                )}
+
+                                {/* Items grid - group by category when viewing All */}
+                                {activeMenuCat === 'All' ? (
+                                    allCategories.slice(1).map(cat => {
+                                        const catItems = store.menuItems.filter(i => i.category === cat);
+                                        return (
+                                            <div key={cat} className={styles.menuSection}>
+                                                <h3 className={styles.menuCatTitle}>{cat}</h3>
+                                                <div className={styles.menuGrid}>
+                                                    {catItems.map(item => (
+                                                        <MenuCard key={item.id} item={item} onSelect={setSelectedItem} onAdd={handleAddToCart} styles={styles} />
+                                                    ))}
+                                                </div>
                                             </div>
-                                        </div>
+                                        );
+                                    })
+                                ) : (
+                                    <div className={styles.menuGrid}>
+                                        {visibleItems.map(item => (
+                                            <MenuCard key={item.id} item={item} onSelect={setSelectedItem} onAdd={handleAddToCart} styles={styles} />
+                                        ))}
                                     </div>
-                                ))}
-                            </div>
+                                )}
+                            </>
                         )
                     )}
 
@@ -187,46 +213,52 @@ function StoreModal({ store, onClose }) {
                     {/* ── INFO TAB ── */}
                     {activeTab === 'info' && (
                         <div className={styles.infoGrid}>
-                            <div className={styles.infoItem}>
-                                <strong>Branch Name</strong>
-                                <span>{store.branchName}</span>
-                            </div>
-                            <div className={styles.infoItem}>
-                                <strong>Location</strong>
-                                <span>{store.location}</span>
-                            </div>
-                            <div className={styles.infoItem}>
-                                <strong>Status</strong>
-                                <span className={store.status === 'Operational' ? styles.statusOpen : styles.statusClosed}>
-                                    ● {store.status}
-                                </span>
-                            </div>
-                            <div className={styles.infoItem}>
-                                <strong>Operating Hours</strong>
-                                <span>{store.hours}</span>
-                            </div>
-                            <div className={styles.infoItem}>
-                                <strong>Contact</strong>
-                                <span>{store.phone}</span>
-                            </div>
-                            <div className={styles.infoItem}>
-                                <strong>Cuisine Type</strong>
-                                <span>{store.cuisine}</span>
-                            </div>
-                            <div className={styles.infoItem}>
-                                <strong>Delivery Time</strong>
-                                <span>{store.deliveryTime}</span>
-                            </div>
-                            <div className={styles.infoItem}>
-                                <strong>Min. Order</strong>
-                                <span>{store.minOrder}</span>
-                            </div>
+                            {[
+                                { label: 'Branch Name', value: store.branchName },
+                                { label: 'Location', value: store.location },
+                                { label: 'Status', value: store.status, isStatus: true },
+                                { label: 'Operating Hours', value: store.hours },
+                                { label: 'Contact', value: store.phone },
+                                { label: 'Cuisine Type', value: store.cuisine },
+                                { label: 'Delivery Time', value: store.deliveryTime },
+                                { label: 'Min. Order', value: store.minOrder },
+                            ].map(({ label, value, isStatus }) => (
+                                <div key={label} className={styles.infoItem}>
+                                    <strong>{label}</strong>
+                                    <span className={isStatus ? (value === 'Operational' ? styles.statusOpen : styles.statusClosed) : ''}>
+                                        {isStatus ? `● ${value}` : value}
+                                    </span>
+                                </div>
+                            ))}
                             <div className={`${styles.infoItem} ${styles.infoFull}`}>
                                 <strong>About</strong>
                                 <span>{store.about}</span>
                             </div>
                         </div>
                     )}
+                </div>
+            </div>
+        </div>
+    );
+}
+
+/* ── Reusable menu card ── */
+function MenuCard({ item, onSelect, onAdd, styles }) {
+    return (
+        <div className={styles.menuCard} onClick={() => onSelect(item)}>
+            <img src={item.image} alt={item.title} className={styles.menuCardImg} />
+            <div className={styles.menuCardBody}>
+                <h4 className={styles.menuCardTitle}>{item.title}</h4>
+                <p className={styles.menuCardDesc}>{item.description}</p>
+                <div className={styles.menuCardFooter}>
+                    <span className={styles.menuCardPrice}>${item.price.toFixed(2)}</span>
+                    <button
+                        className={styles.addBtn}
+                        onClick={(e) => { e.stopPropagation(); onAdd(item); }}
+                        aria-label="Add to cart"
+                    >
+                        <ShoppingCart size={13} /> Add
+                    </button>
                 </div>
             </div>
         </div>
