@@ -10,6 +10,7 @@ import AnnouncementDetail from './components/sections/AnnouncementDetail';
 import FAQPage from './pages/FAQPage';
 import ServicesPage from './pages/ServicesPage';
 import MenuPage from './pages/MenuPage';
+import RestaurantMenuPage from './pages/RestaurantMenuPage';
 import CartPage from './pages/CartPage';
 import CheckoutPage from './pages/CheckoutPage';
 import LoginPage from './pages/LoginPage';
@@ -58,6 +59,7 @@ function App() {
             <Route path="/faq" element={<FAQPage />} />
             <Route path="/services" element={<ServicesPage />} />
             <Route path="/menu" element={<MenuPage />} />
+            <Route path="/menu/:storeId" element={<RestaurantMenuPage />} />
             <Route path="/cart" element={<CartPage />} />
             <Route path="/checkout" element={<CheckoutPage />} />
             <Route path="/order-tracking" element={<OrderTrackingPage />} />
