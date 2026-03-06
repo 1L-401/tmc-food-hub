@@ -5,7 +5,7 @@ import {
     Plus, Pencil, Trash2, ToggleLeft, ToggleRight, Save, X, Check,
     Package, DollarSign, ShoppingBag, Truck, Bell,
     AlertCircle, CheckCircle2, Timer, MapPin, FileText, Tag,
-    Hash, Layers, ExternalLink
+    Hash, Layers, ExternalLink, Search, TrendingUp, TrendingDown, Star
 } from 'lucide-react';
 import { useOwnerAuth } from '../context/OwnerAuthContext';
 import tmcLogo from '../assets/imgs/tmc-foodhub-logo.svg';
@@ -40,64 +40,201 @@ function statusMeta(s) {
 
 /* ─── Overview ───────────────────────────────────────────────────────────── */
 function OverviewSection({ store, orders }) {
-    const active = store.menuItems.filter(i => i.available).length;
     const pending = orders.filter(o => o.status === 'Pending').length;
     const todayRev = orders.filter(o => o.status === 'Delivered').reduce((s, o) => s + o.total, 0);
-    const cats = [...new Set(store.menuItems.map(i => i.category))].length;
+
+    // Example metrics mapping to the design shown
     const stats = [
-        { icon: <Package size={20} />, label: 'Menu Items', value: store.menuItems.length, sub: `${active} available`, color: '#2563EB' },
-        { icon: <ShoppingBag size={20} />, label: 'New Orders', value: pending, sub: 'awaiting action', color: '#D97706' },
-        { icon: <DollarSign size={20} />, label: "Today's Revenue", value: `$${todayRev.toFixed(2)}`, sub: `${orders.filter(o => o.status === 'Delivered').length} delivered`, color: '#059669' },
-        { icon: <UtensilsCrossed size={20} />, label: 'Categories', value: cats, sub: 'menu sections', color: '#7C3AED' },
+        {
+            icon: <ShoppingBag size={18} color="#DC2626" />,
+            label: "Today's Orders",
+            value: '142',
+            trend: '+12%',
+            trendUp: true,
+            iconBg: '#FEF2F2'
+        },
+        {
+            icon: <Package size={18} color="#DC2626" />,
+            label: 'Active Orders',
+            value: '12',
+            trend: '+8%',
+            trendUp: true,
+            iconBg: '#FEF2F2'
+        },
+        {
+            icon: <DollarSign size={18} color="#DC2626" />,
+            label: "Revenue Today",
+            value: `$2,450.00`,
+            trend: '-12%',
+            trendUp: false,
+            iconBg: '#FEF2F2'
+        },
+        {
+            icon: <AlertCircle size={18} color="#DC2626" />,
+            label: 'Inventory Alerts',
+            value: '5',
+            badge: 'Critical',
+            iconBg: '#FEF2F2'
+        },
     ];
+
     return (
-        <div>
+        <div className={styles.overviewContainer}>
+            {/* Stat Cards */}
             <div className={styles.statsGrid}>
                 {stats.map(s => (
-                    <div key={s.label} className={styles.statCard}>
-                        <div className={styles.statIconWrap} style={{ '--c': s.color }}>{s.icon}</div>
-                        <div className={styles.statBody}>
-                            <span className={styles.statValue}>{s.value}</span>
-                            <span className={styles.statLabel}>{s.label}</span>
-                            <span className={styles.statSub}>{s.sub}</span>
+                    <div key={s.label} className={styles.statCardNew}>
+                        <div className={styles.statCardTopRow}>
+                            <div className={styles.statIconWrapNew} style={{ background: s.iconBg }}>
+                                {s.icon}
+                            </div>
+                            {s.trend && (
+                                <div className={`${styles.statTrend} ${s.trendUp ? styles.trendUp : styles.trendDown}`}>
+                                    {s.trendUp ? <TrendingUp size={14} /> : <TrendingDown size={14} />} {s.trend}
+                                </div>
+                            )}
+                            {s.badge && (
+                                <div className={styles.statBadgeCritical}>
+                                    {s.badge}
+                                </div>
+                            )}
+                        </div>
+                        <div className={styles.statBodyNew}>
+                            <span className={styles.statLabelNew}>{s.label}</span>
+                            <span className={styles.statValueNew}>{s.value}</span>
                         </div>
                     </div>
                 ))}
             </div>
 
-            {/* Popular items */}
-            <div className={styles.overviewSection}>
-                <div className={styles.cardHeader}>Popular Menu Items</div>
-                <div className={styles.topItems}>
-                    {store.menuItems.slice(0, 6).map(item => (
-                        <div key={item.id} className={styles.topItemCard}>
-                            <img src={item.image} alt={item.title} className={styles.topItemImg} />
-                            <div className={styles.topItemInfo}><span className={styles.topItemName}>{item.title}</span><span className={styles.topItemPrice}>${item.price.toFixed(2)}</span></div>
-                            <span className={`${styles.topItemBadge} ${item.available ? styles.badgeGreen : styles.badgeRed}`}>{item.available ? 'Active' : 'Out'}</span>
-                        </div>
-                    ))}
+            {/* Middle Row: Recent Orders and Popular Menu */}
+            <div className={styles.overviewMiddleRow}>
+                {/* Recent Orders List */}
+                <div className={styles.infoCardDesktop}>
+                    <div className={styles.cardHeaderRow}>
+                        <h3 className={styles.cardDesktopTitle}>Recent Orders</h3>
+                        <button className={styles.btnViewAll}>View All</button>
+                    </div>
+
+                    <div className={styles.tableWrap}>
+                        <table className={styles.recentOrdersTable}>
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Items</th>
+                                    <th>Status</th>
+                                    <th>Time</th>
+                                    <th className={styles.textRight}>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {orders.slice(0, 3).map(o => {
+                                    const m = statusMeta(o.status);
+                                    let statusPillClass = styles.pillPending;
+                                    if (o.status === 'Preparing') statusPillClass = styles.pillPreparing;
+                                    if (o.status === 'Delivering') statusPillClass = styles.pillDelivering;
+                                    if (o.status === 'Delivered') statusPillClass = styles.pillDelivered;
+
+                                    return (
+                                        <tr key={o.id}>
+                                            <td className={styles.orderIdCell}>{o.id}</td>
+                                            <td className={styles.itemsSummaryCell}>
+                                                {o.items.map(it => `${it.qty}x ${it.name}`).join(', ')}
+                                            </td>
+                                            <td>
+                                                <span className={`${styles.statusPillSmall} ${statusPillClass}`}>{o.status}</span>
+                                            </td>
+                                            <td className={styles.timeCell}>{o.time}</td>
+                                            <td className={styles.textRight}>
+                                                <button className={styles.actionBtnOutline}>{m.nextLabel || 'View'}</button>
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                {/* Popular Menu List */}
+                <div className={styles.infoCardDesktop}>
+                    <div className={styles.cardHeaderRow}>
+                        <h3 className={styles.cardDesktopTitle}>Popular Menu</h3>
+                        <button className={styles.btnViewAll}>View All</button>
+                    </div>
+                    <div className={styles.popularMenuList}>
+                        {store.menuItems.slice(0, 3).map(item => (
+                            <div key={item.id} className={styles.popularMenuItemRow}>
+                                <img src={item.image} alt={item.title} className={styles.popularMenuImg} />
+                                <div className={styles.popularMenuInfo}>
+                                    <div className={styles.popularMenuTitle}>{item.title}</div>
+                                    <div className={styles.popularMenuOrders}>
+                                        {Math.floor(Math.random() * 300) + 50} orders this week
+                                    </div>
+                                </div>
+                                <div className={styles.popularMenuPrice}>${item.price.toFixed(2)}</div>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </div>
 
-            <div className={styles.overviewCards}>
-                <div className={styles.infoCard}>
-                    <div className={styles.cardHeader}>Branch Details</div>
-                    {[['Branch', store.branchName], ['Location', store.location], ['Phone', store.phone], ['Delivery', store.deliveryTime], ['Min. Order', store.minOrder], ['Status', store.status]].map(([k, v]) => (
-                        <div key={k} className={styles.infoRow}><span>{k}</span><strong className={k === 'Status' ? (v === 'Operational' ? styles.pillGreen : styles.pillRed) : ''}>{k === 'Status' ? `● ${v}` : v}</strong></div>
-                    ))}
+            {/* Bottom Row: Sales Revenue & Recent Reviews */}
+            <div className={styles.overviewBottomRow}>
+                {/* Sales Revenue Chart (Mock) */}
+                <div className={styles.infoCardDesktop}>
+                    <div className={styles.cardHeaderRow}>
+                        <h3 className={styles.cardDesktopTitle}>Sales Revenue</h3>
+                        <select className={styles.chartSelect}>
+                            <option>Last 7 days</option>
+                            <option>This Month</option>
+                        </select>
+                    </div>
+                    <div className={styles.chartWrapper}>
+                        <div className={styles.chartYAxis}>
+                            <span>$15k</span>
+                            <span>$10k</span>
+                            <span>$5k</span>
+                            <span>0</span>
+                        </div>
+                        <div className={styles.chartBars}>
+                            {/* Mon - Sun */}
+                            <div className={styles.chartCol}><div className={styles.chartBar} style={{ height: '20%' }}></div><span className={styles.chartDay}>Mon</span></div>
+                            <div className={styles.chartCol}><div className={styles.chartBar} style={{ height: '65%' }}></div><span className={styles.chartDay}>Tue</span></div>
+                            <div className={styles.chartCol}><div className={styles.chartBar} style={{ height: '35%' }}></div><span className={styles.chartDay}>Wed</span></div>
+                            <div className={styles.chartCol}><div className={styles.chartBar} style={{ height: '55%' }}></div><span className={styles.chartDay}>Thu</span></div>
+                            <div className={styles.chartCol}><div className={styles.chartBar} style={{ height: '40%' }}></div><span className={styles.chartDay}>Fri</span></div>
+                            <div className={styles.chartCol}><div className={styles.chartBar} style={{ height: '75%' }}></div><span className={styles.chartDay}>Sat</span></div>
+                            <div className={styles.chartCol}><div className={styles.chartBar} style={{ height: '90%' }}></div><span className={styles.chartDay}>Sun</span></div>
+                        </div>
+                    </div>
                 </div>
-                <div className={styles.infoCard}>
-                    <div className={styles.cardHeader}>Recent Orders</div>
-                    {orders.slice(0, 4).map(o => {
-                        const m = statusMeta(o.status); return (
-                            <div key={o.id} className={styles.infoRow}>
-                                <span style={{ fontFamily: 'monospace', fontWeight: 700 }}>{o.id}</span>
-                                <span>{o.customer}</span>
-                                <span className={styles.statusPillSmall} style={{ background: m.bg, color: m.color }}>{o.status}</span>
-                                <strong>${o.total.toFixed(2)}</strong>
+
+                {/* Recent Reviews */}
+                <div className={styles.infoCardDesktop}>
+                    <div className={styles.cardHeaderRow}>
+                        <h3 className={styles.cardDesktopTitle}>Recent Reviews</h3>
+                        <button className={styles.btnViewAll}>View All</button>
+                    </div>
+                    <div className={styles.recentReviewsList}>
+                        {[
+                            { id: 1, name: 'Maria L.', rating: 5, text: 'The Lumpiang Shanghai is so crispy and still hot when it arrived! SM Baguio branch never fails to deliver quality food.', img: 'https://i.pravatar.cc/100?u=1' },
+                            { id: 2, name: 'James T.', rating: 4, text: 'Great food as always. Delivery was a bit slow today due to the rain, but the rider was very polite.', img: 'https://i.pravatar.cc/100?u=2' },
+                        ].map(rev => (
+                            <div key={rev.id} className={styles.recentReviewCard}>
+                                <div className={styles.reviewCardHeaderRow}>
+                                    <div className={styles.reviewAuthor}>
+                                        <img src={rev.img} alt={rev.name} className={styles.reviewAvatarSmall} />
+                                        <span className={styles.reviewAuthorName}>{rev.name}</span>
+                                    </div>
+                                    <div className={styles.reviewStarsSmall}>
+                                        {[1, 2, 3, 4, 5].map(i => <Star key={i} size={12} fill={i <= rev.rating ? "#F5A623" : "none"} color="#F5A623" />)}
+                                    </div>
+                                </div>
+                                <div className={styles.reviewTextSmall}>{rev.text}</div>
                             </div>
-                        );
-                    })}
+                        ))}
+                    </div>
                 </div>
             </div>
         </div>
@@ -296,24 +433,61 @@ function SettingsSection({ store, onUpdate }) {
 }
 
 /* ─── Dashboard Shell ────────────────────────────────────────────────────── */
-const NAV = [
-    { key: 'overview', label: 'Overview', icon: <LayoutDashboard size={18} /> },
-    { key: 'orders', label: 'Orders', icon: <ShoppingBag size={18} /> },
-    { key: 'menu', label: 'Menu', icon: <UtensilsCrossed size={18} /> },
-    { key: 'hours', label: 'Hours', icon: <Clock size={18} /> },
-    { key: 'settings', label: 'Settings', icon: <Settings size={18} /> },
+const NAV_GROUPS = [
+    {
+        label: 'Operations',
+        items: [
+            { key: 'overview', label: 'Dashboard', icon: <LayoutDashboard size={18} /> },
+            { key: 'orders', label: 'Orders', icon: <ShoppingBag size={18} /> },
+            { key: 'inventory', label: 'Inventory', icon: <Package size={18} /> },
+        ]
+    },
+    {
+        label: 'Menu',
+        items: [
+            { key: 'menu', label: 'Menu', icon: <UtensilsCrossed size={18} /> },
+            { key: 'categories', label: 'Categories', icon: <Layers size={18} /> },
+            { key: 'promotions', label: 'Promotions', icon: <Tag size={18} /> },
+        ]
+    },
+    {
+        label: 'Engagement',
+        items: [
+            { key: 'reviews', label: 'Reviews', icon: <Star size={18} /> },
+        ]
+    },
+    {
+        label: 'Finance',
+        items: [
+            { key: 'analytics', label: 'Analytics', icon: <FileText size={18} /> },
+            { key: 'earnings', label: 'Earnings', icon: <DollarSign size={18} /> },
+        ]
+    },
+    {
+        label: 'System',
+        items: [
+            { key: 'settings', label: 'Settings', icon: <Settings size={18} /> },
+        ]
+    }
 ];
 
 function OwnerDashboard() {
     const { currentOwner, ownerStore, logout, updateStore } = useOwnerAuth();
     const navigate = useNavigate();
     const [active, setActive] = useState('overview');
+    const [profileOpen, setProfileOpen] = useState(false);
 
     if (!currentOwner) { navigate('/owner-login'); return null; }
     if (!ownerStore) return <p>Store not found.</p>;
 
     const mockOrders = buildOrders(ownerStore);
     const pendingCount = mockOrders.filter(o => o.status === 'Pending').length;
+
+    let activeLabel = 'Dashboard';
+    NAV_GROUPS.forEach(g => {
+        const found = g.items.find(i => i.key === active);
+        if (found) activeLabel = found.label;
+    });
 
     return (
         <div className={styles.shell}>
@@ -327,33 +501,42 @@ function OwnerDashboard() {
                     <div className={styles.portalLabel}>Restaurant Portal</div>
                 </div>
 
-                {/* Store info */}
-                <div className={styles.storeInfo}>
-                    <div className={styles.storeAvatar}>{ownerStore.name.charAt(0)}</div>
-                    <div className={styles.storeDetails}>
-                        <div className={styles.storeName}>{ownerStore.name}</div>
-                        <div className={styles.branchName}>{ownerStore.branchName}</div>
-                    </div>
-                    <span className={`${styles.statusDot} ${ownerStore.status === 'Operational' ? styles.dotGreen : styles.dotRed}`} />
-                </div>
-
                 {/* Navigation */}
                 <nav className={styles.nav}>
-                    <div className={styles.navLabel}>MANAGEMENT</div>
-                    {NAV.map(n => (
-                        <button key={n.key} className={`${styles.navBtn} ${active === n.key ? styles.navBtnActive : ''}`} onClick={() => setActive(n.key)}>
-                            <span className={styles.navIcon}>{n.icon}</span>
-                            <span>{n.label}</span>
-                            {n.key === 'orders' && pendingCount > 0 && <span className={styles.badge}>{pendingCount}</span>}
-                        </button>
+                    {NAV_GROUPS.map(group => (
+                        <div key={group.label} className={styles.navGroup}>
+                            <div className={styles.navLabel}>{group.label}</div>
+                            {group.items.map(n => (
+                                <button key={n.key} className={`${styles.navBtn} ${active === n.key ? styles.navBtnActive : ''}`} onClick={() => setActive(n.key)}>
+                                    <span className={styles.navIcon}>{n.icon}</span>
+                                    <span>{n.label}</span>
+                                    {n.key === 'orders' && pendingCount > 0 && <span className={styles.badge}>{pendingCount}</span>}
+                                </button>
+                            ))}
+                        </div>
                     ))}
                 </nav>
 
-                {/* Footer */}
+                {/* Footer / Profile Menu */}
                 <div className={styles.sidebarFooter}>
-                    <Link to="/" className={styles.backToSite}><ExternalLink size={13} /> Back to TMC Food Hub</Link>
-                    <div className={styles.ownerEmail}>{currentOwner.email}</div>
-                    <button className={styles.logoutBtn} onClick={() => { logout(); navigate('/owner-login'); }}><LogOut size={14} /> Sign out</button>
+                    {profileOpen && (
+                        <div className={styles.profileMenu}>
+                            <button className={styles.profileMenuBtn}>View Profile</button>
+                            <button className={styles.profileMenuBtn}>Account Settings</button>
+                            <button className={styles.profileMenuBtn}>Dark Mode <ToggleLeft size={16} /></button>
+                            <div className={styles.profileMenuDivider}></div>
+                            <button className={`${styles.profileMenuBtn} ${styles.profileMenuLogout}`} onClick={() => { logout(); navigate('/owner-login'); }}>
+                                <LogOut size={16} /> Logout
+                            </button>
+                        </div>
+                    )}
+                    <button className={styles.storeProfileBtn} onClick={() => setProfileOpen(!profileOpen)}>
+                        <div className={styles.storeAvatar}>{ownerStore.name.charAt(0)}</div>
+                        <div className={styles.storeDetails}>
+                            <div className={styles.storeName}>{ownerStore.branchName}</div>
+                            <div className={styles.branchName}>Store Manager</div>
+                        </div>
+                    </button>
                 </div>
             </aside>
 
@@ -361,10 +544,19 @@ function OwnerDashboard() {
             <div className={styles.main}>
                 <div className={styles.topBar}>
                     <div>
-                        <h1 className={styles.topTitle}>{NAV.find(n => n.key === active)?.label}</h1>
-                        <p className={styles.topSub}>{ownerStore.branchName} — {ownerStore.name}</p>
+                        <h1 className={styles.topTitle}>{active === 'overview' ? 'Dashboard' : activeLabel}</h1>
+                        <p className={styles.topSub}>Welcome back, {ownerStore.branchName}!</p>
                     </div>
-                    <span className={`${styles.statusPill} ${ownerStore.status === 'Operational' ? styles.pillGreen : styles.pillRed}`}>● {ownerStore.status}</span>
+                    <div className={styles.topRight}>
+                        <div className={styles.searchWrap}>
+                            <Search className={styles.searchIcon} size={16} />
+                            <input type="text" placeholder="Search orders, menu..." className={styles.searchInput} />
+                        </div>
+                        <button className={styles.notificationBtn}>
+                            <Bell size={20} />
+                            <span className={styles.notificationBadge}></span>
+                        </button>
+                    </div>
                 </div>
                 <div className={styles.content}>
                     {active === 'overview' && <OverviewSection store={ownerStore} orders={mockOrders} />}
