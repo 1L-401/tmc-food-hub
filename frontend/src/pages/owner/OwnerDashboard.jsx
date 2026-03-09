@@ -17,6 +17,8 @@ import InventorySection from './dashboard-sections/InventorySection';
 import MenuSection from './dashboard-sections/MenuSection';
 import HoursSection from './dashboard-sections/HoursSection';
 import SettingsSection from './dashboard-sections/SettingsSection';
+import PromotionsSection from './dashboard-sections/PromotionsSection';
+import CategoriesSection from './dashboard-sections/CategoriesSection';
 import { buildOrders } from './dashboard-sections/shared';
 /* ─── Dashboard Shell ────────────────────────────────────────────────────── */
 const NAV_GROUPS = [
@@ -149,6 +151,8 @@ function OwnerDashboard() {
                     {active === 'orders' && <OrdersSection store={ownerStore} />}
                     {active === 'inventory' && <InventorySection store={ownerStore} onUpdate={updateStore} />}
                     {active === 'menu' && <MenuSection store={ownerStore} onUpdate={updateStore} />}
+                    {active === 'categories' && <CategoriesSection />}
+                    {active === 'promotions' && <PromotionsSection />}
                     {active === 'hours' && <HoursSection store={ownerStore} onUpdate={updateStore} />}
                     {active === 'settings' && <SettingsSection store={ownerStore} onUpdate={updateStore} />}
                 </div>

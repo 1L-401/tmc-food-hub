@@ -3442,3 +3442,626 @@
         grid-template-columns: 1fr;
     }
 }
+
+/* --- Promotions & Deals Section --------------------------------------------- */
+.sectionContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.sectionSubtitle {
+    font-size: .875rem;
+    color: #6B7280;
+    margin-top: 4px;
+}
+
+.headerActions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+/* Tabs */
+.tabsContainer {
+    display: flex;
+    gap: 1.5rem;
+    border-bottom: 1px solid #E5E7EB;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.tabBtn {
+    background: transparent;
+    border: none;
+    font-size: .875rem;
+    font-weight: 600;
+    color: #9CA3AF;
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+
+.tabBtn:hover {
+    color: #4B5563;
+    background: #F3F4F6;
+}
+
+.tabBtnActive {
+    background: #991B1B !important;
+    color: white !important;
+}
+
+/* Metrics Grid - matching the overview cards mostly but customized slightly */
+.metricsGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+}
+
+.metricCard {
+    background: white;
+    border: 1px solid #E5E7EB;
+    border-radius: 12px;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.metricLabel {
+    font-size: .75rem;
+    font-weight: 600;
+    color: #9CA3AF;
+    margin-bottom: 0.5rem;
+}
+
+.metricValue {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #111827;
+    margin-bottom: 0.25rem;
+}
+
+.metricTrendPositive {
+    font-size: .75rem;
+    font-weight: 600;
+    color: #059669;
+}
+
+.metricSubtext {
+    font-size: .75rem;
+    color: #6B7280;
+}
+
+/* Table container styling */
+.tableContainer {
+    background: white;
+    border: 1px solid #E5E7EB;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-top: 0.5rem;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.table th {
+    padding: 1rem 1.25rem;
+    background: #F9FAFB;
+    font-size: .75rem;
+    font-weight: 600;
+    color: #6B7280;
+    border-bottom: 1px solid #E5E7EB;
+}
+
+.table td {
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid #F3F4F6;
+    vertical-align: middle;
+}
+
+.itemTitle {
+    font-size: .875rem;
+    font-weight: 700;
+    color: #111827;
+}
+
+.itemSubtitle {
+    font-size: .75rem;
+    color: #9CA3AF;
+    margin-top: 2px;
+}
+
+.validDates {
+    font-size: .875rem;
+    font-weight: 600;
+    color: #4B5563;
+}
+
+/* Badges */
+.discountBadge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: .75rem;
+    font-weight: 700;
+}
+
+.discountPercentage {
+    background: #FEF2F2;
+    color: #991B1B;
+}
+
+.discountFixed {
+    background: #FEF2F2;
+    color: #991B1B;
+}
+
+.discountBuy {
+    background: #FEF2F2;
+    color: #991B1B;
+}
+
+.discountFree {
+    background: #FEF2F2;
+    color: #991B1B;
+}
+
+.statusBadge {
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: .75rem;
+    font-weight: 700;
+}
+
+.statusActive {
+    color: #059669;
+    background: #ECFDF5;
+}
+
+.statusScheduled {
+    color: #059669;
+    background: #ECFDF5;
+}
+
+.statusExpired {
+    color: #DC2626;
+    background: #FEF2F2;
+}
+
+/* Action Buttons */
+.actionButtons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.iconBtn {
+    background: white;
+    border: 1px solid #E5E7EB;
+    color: #6B7280;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.iconBtn:hover {
+    background: #F9FAFB;
+    color: #111827;
+    border-color: #D1D5DB;
+}
+
+.emptyState {
+    padding: 3rem;
+    text-align: center;
+    color: #6B7280;
+    font-size: .875rem;
+}
+
+/* --- Promotions Modal ------------------------------------------------------- */
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modalContent {
+    background: white;
+    width: 600px;
+    max-width: 90vw;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh;
+}
+
+.modalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    border-bottom: 1px solid #E5E7EB;
+}
+
+.modalTitle {
+    font-size: 1.125rem;
+    font-weight: 800;
+    color: #111827;
+    margin: 0;
+}
+
+.modalCloseBtn {
+    background: transparent;
+    border: none;
+    color: #9CA3AF;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s;
+}
+
+.modalCloseBtn:hover {
+    color: #4B5563;
+}
+
+.modalBody {
+    padding: 1.5rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.formSectionTitle {
+    font-size: .875rem;
+    font-weight: 700;
+    color: #111827;
+    margin: 0 0 1rem 0;
+}
+
+.formRow {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.formLabel {
+    font-size: .75rem;
+    font-weight: 600;
+    color: #4B5563;
+}
+
+.formInput,
+.formSelect {
+    width: 100%;
+    padding: 0.625rem 0.875rem;
+    border: 1px solid #D1D5DB;
+    border-radius: 6px;
+    font-size: .875rem;
+    color: #111827;
+    background: white;
+    outline: none;
+    transition: all 0.2s;
+}
+
+.formInput:focus,
+.formSelect:focus {
+    border-color: #991B1B;
+    box-shadow: 0 0 0 2px rgba(153, 27, 27, 0.1);
+}
+
+.inputWithPrefix {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.inputPrefix {
+    position: absolute;
+    left: 0.875rem;
+    color: #6B7280;
+    font-size: .875rem;
+    pointer-events: none;
+}
+
+.inputWithPrefix .formInput {
+    padding-left: 1.75rem;
+}
+
+.radioGroup {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.radioLabel {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: .875rem;
+    color: #4B5563;
+    cursor: pointer;
+}
+
+.radioLabel input[type="radio"] {
+    accent-color: #991B1B;
+    width: 16px;
+    height: 16px;
+}
+
+.modalFooter {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #E5E7EB;
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+.btnCancel {
+    padding: 0.625rem 1.25rem;
+    background: white;
+    border: 1px solid #D1D5DB;
+    border-radius: 6px;
+    font-size: .875rem;
+    font-weight: 600;
+    color: #374151;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btnCancel:hover {
+    background: #F9FAFB;
+}
+
+.btnSave {
+    padding: 0.625rem 1.25rem;
+    background: #991B1B;
+    border: none;
+    border-radius: 6px;
+    font-size: .875rem;
+    font-weight: 600;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btnSave:hover {
+    background: #7F1D1D;
+}
+
+/* ─── Status Dialogs ───────────────────────────────────────────────────────── */
+.statusDialogContent {
+    background: white;
+    width: 380px;
+    max-width: 90vw;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2.5rem 2rem 2rem;
+    text-align: center;
+}
+
+.statusIconCircle {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.25rem;
+}
+
+.iconSuccess {
+    background: #ECFDF5;
+    color: #059669;
+}
+
+.iconError {
+    background: #FEF2F2;
+    color: #DC2626;
+}
+
+.statusDialogTitle {
+    font-size: 1.125rem;
+    font-weight: 800;
+    color: #111827;
+    margin: 0 0 0.5rem 0;
+}
+
+.statusDialogMessage {
+    font-size: .875rem;
+    color: #6B7280;
+    line-height: 1.5;
+    margin: 0 0 1.5rem 0;
+}
+
+.statusDialogActions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100%;
+}
+
+.btnStatusAction {
+    width: 100%;
+    padding: 0.75rem;
+    background: #991B1B;
+    border: none;
+    border-radius: 8px;
+    font-size: .875rem;
+    font-weight: 600;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btnStatusAction:hover {
+    background: #7F1D1D;
+}
+
+.btnStatusSecondary {
+    width: 100%;
+    padding: 0.75rem;
+    background: transparent;
+    border: none;
+    font-size: .875rem;
+    font-weight: 600;
+    color: #4B5563;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btnStatusSecondary:hover {
+    color: #111827;
+}
+
+/* ─── Categories Section ───────────────────────────────────────────────────── */
+.infoBanner {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: #FEF2F2;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    align-items: flex-start;
+}
+
+.infoBannerIcon {
+    color: #991B1B;
+    margin-top: 2px;
+}
+
+.infoBannerText {
+    flex: 1;
+}
+
+.infoBannerText strong {
+    display: block;
+    color: #991B1B;
+    font-size: .875rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.infoBannerText p {
+    color: #991B1B;
+    font-size: .875rem;
+    margin: 0;
+    line-height: 1.4;
+}
+
+.categoryNameCell {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.dragHandle {
+    color: #D1D5DB;
+    cursor: grab;
+}
+
+.categoryIconCircle {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: #FEF2F2;
+    color: #991B1B;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.categoryIconList {
+    width: 16px;
+    height: 16px;
+}
+
+.actionButtonsRight {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+}
+
+/* Category Modal Additions */
+.iconSelectorGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(48px, 1fr));
+    gap: 0.75rem;
+    padding: 1rem;
+    border: 1px solid #E5E7EB;
+    border-radius: 8px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.iconSelectBtn {
+    height: 48px;
+    background: white;
+    border: 1px solid #E5E7EB;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6B7280;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.iconSelectBtn:hover {
+    border-color: #D1D5DB;
+    color: #374151;
+    background: #F9FAFB;
+}
+
+.iconSelectBtnActive {
+    border-color: #991B1B;
+    background: #FEF2F2;
+    color: #991B1B;
+}
+
+.formTextarea {
+    width: 100%;
+    padding: 0.625rem 0.875rem;
+    border: 1px solid #D1D5DB;
+    border-radius: 6px;
+    font-size: .875rem;
+    color: #111827;
+    background: white;
+    outline: none;
+    transition: all 0.2s;
+    font-family: inherit;
+    resize: vertical;
+}
+
+.formTextarea:focus {
+    border-color: #991B1B;
+    box-shadow: 0 0 0 2px rgba(153, 27, 27, 0.1);
+}
