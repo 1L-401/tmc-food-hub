@@ -2210,6 +2210,582 @@
     background: #7F1D1D;
 }
 
+/* ─── Inventory Table ────────────────────────────────────────────────────── */
+.inventoryTableContainer {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.inventoryMainTable {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 800px;
+}
+
+.inventoryMainTable th {
+    text-align: left;
+    padding: 1rem 1.25rem;
+    font-size: .85rem;
+    font-weight: 600;
+    color: #6B7280;
+    border-bottom: 2px solid #F3F4F6;
+    white-space: nowrap;
+}
+
+.inventoryTableRow {
+    border-bottom: 1px solid #F3F4F6;
+    transition: background-color 0.15s;
+}
+
+.inventoryTableRow:hover {
+    background-color: #FAFBFC;
+}
+
+.inventoryMainTable td {
+    padding: 1rem 1.25rem;
+    vertical-align: middle;
+    font-size: .9rem;
+    color: #111827;
+}
+
+.inventoryItemCell {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+}
+
+.inventoryItemImgBadge {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background: #F9FAFB;
+    border: 1px solid #E5E7EB;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.inventoryItemImgBadge img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.itemName {
+    font-weight: 700;
+    font-size: .95rem;
+}
+
+.itemCategory {
+    color: #6B7280;
+    font-size: .85rem;
+}
+
+.stockLevelLow {
+    color: #DC2626;
+    font-weight: 700;
+}
+
+.stockLevelOut {
+    color: #DC2626;
+    font-weight: 700;
+}
+
+.stockLevelNormal {
+    color: #4B5563;
+}
+
+.statusPillInv {
+    display: inline-flex;
+    align-items: center;
+    padding: .25rem .6rem;
+    border-radius: 999px;
+    font-size: .75rem;
+    font-weight: 700;
+}
+
+.statusAvailable {
+    background: #DCFCE7;
+    color: #166534;
+}
+
+.statusLowStock {
+    background: #FEF3C7;
+    color: #92400E;
+}
+
+.statusOutOfStock {
+    background: #FEE2E2;
+    color: #991B1B;
+}
+
+.btnRefillNow {
+    background: none;
+    border: none;
+    color: #991B1B;
+    font-weight: 700;
+    font-size: .85rem;
+    cursor: pointer;
+    padding: 0;
+}
+
+.btnRefillNow:hover {
+    text-decoration: underline;
+}
+
+.toggleSwitch {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
+}
+
+.toggleSwitch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggleSlider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #E5E7EB;
+    transition: .4s;
+    border-radius: 24px;
+}
+
+.toggleSlider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.toggleSwitch input:checked+.toggleSlider {
+    background-color: #991B1B;
+}
+
+.toggleSwitch input:checked+.toggleSlider:before {
+    transform: translateX(20px);
+}
+
+.toggleSwitch input:disabled+.toggleSlider {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ─── Inventory Modals & Empty State ─────────────────────────────────────── */
+.emptyStateContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    text-align: center;
+}
+
+.emptyStateIconWrapper {
+    width: 80px;
+    height: 80px;
+    background: #FEF2F2;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+}
+
+.emptyStateTitle {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #111827;
+    margin-bottom: .5rem;
+}
+
+.emptyStateSub {
+    color: #6B7280;
+    font-size: .9rem;
+    max-width: 300px;
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+}
+
+.invModalOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, .45);
+    backdrop-filter: blur(4px);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    animation: fadeIn .15s ease;
+}
+
+.invModal {
+    background: #fff;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: 0 24px 64px rgba(0, 0, 0, .18);
+    overflow: hidden;
+    animation: slideUp .25s cubic-bezier(.34, 1.4, .64, 1);
+}
+
+.invModalHead {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 1.5rem;
+    border-bottom: 1px solid #E5E7EB;
+}
+
+.invModalTitle {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #111827;
+    margin: 0 0 .25rem 0;
+}
+
+.invModalSub {
+    font-size: .85rem;
+    color: #991B1B;
+    margin: 0;
+    font-weight: 600;
+}
+
+.invModalBody {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+.formGroupRow {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.invLabel {
+    font-size: .8rem;
+    font-weight: 700;
+    color: #4B5563;
+}
+
+.invInput {
+    padding: .6rem .8rem;
+    border: 1.5px solid #E5E7EB;
+    border-radius: 8px;
+    font-size: .95rem;
+    outline: none;
+    color: #111827;
+    transition: .18s;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.invInput:focus {
+    border-color: #991B1B;
+    box-shadow: 0 0 0 3px rgba(153, 27, 27, .08);
+}
+
+.invSelect {
+    padding: .6rem .8rem;
+    border: 1.5px solid #E5E7EB;
+    border-radius: 8px;
+    font-size: .95rem;
+    outline: none;
+    color: #111827;
+    transition: .18s;
+    width: 100%;
+    box-sizing: border-box;
+    appearance: none;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right .8rem center;
+    background-color: #fff;
+}
+
+.invSelect:focus {
+    border-color: #991B1B;
+}
+
+.invInputRightIcon {
+    position: relative;
+}
+
+.invInputRightText {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9CA3AF;
+    font-size: .85rem;
+    pointer-events: none;
+}
+
+.invToggleRow {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 1rem;
+    background: #FEF2F2;
+    border-radius: 8px;
+    margin-top: .5rem;
+}
+
+.invToggleText {
+    flex: 1;
+    padding-right: 1rem;
+}
+
+.invToggleTitle {
+    font-size: .85rem;
+    font-weight: 700;
+    color: #991B1B;
+    margin-bottom: .25rem;
+}
+
+.invToggleDesc {
+    font-size: .75rem;
+    color: #7F1D1D;
+    line-height: 1.4;
+}
+
+.invModalFooter {
+    display: flex;
+    gap: .75rem;
+    justify-content: center;
+    padding: 1.25rem 1.5rem;
+    border-top: 1px solid #E5E7EB;
+}
+
+.invBtnCancel {
+    background: #fff;
+    border: 1px solid #E5E7EB;
+    color: #4B5563;
+    padding: .6rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: .9rem;
+    cursor: pointer;
+    flex: 1;
+    transition: .15s;
+}
+
+.invBtnCancel:hover {
+    background: #F9FAFB;
+}
+
+.invBtnSubmit {
+    background: #991B1B;
+    border: none;
+    color: #fff;
+    padding: .6rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: .9rem;
+    cursor: pointer;
+    flex: 1;
+    transition: .15s;
+}
+
+.invBtnSubmit:hover {
+    background: #7F1D1D;
+}
+
+/* Refill Modal specific */
+.refillCounter {
+    display: flex;
+    align-items: center;
+    border: 1.5px solid #E5E7EB;
+    border-radius: 8px;
+    overflow: hidden;
+    height: 48px;
+}
+
+.refillBtn {
+    width: 48px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #F9FAFB;
+    border: none;
+    cursor: pointer;
+    color: #4B5563;
+    transition: .15s;
+}
+
+.refillBtn:hover {
+    background: #E5E7EB;
+}
+
+.refillInput {
+    flex: 1;
+    height: 100%;
+    border: none;
+    border-left: 1.5px solid #E5E7EB;
+    border-right: 1.5px solid #E5E7EB;
+    text-align: center;
+    font-weight: 700;
+    font-size: 1rem;
+    outline: none;
+    color: #111827;
+}
+
+.quickAddRow {
+    display: flex;
+    gap: .5rem;
+    margin-top: .5rem;
+}
+
+.quickAddBtn {
+    flex: 1;
+    padding: .4rem 0;
+    border: 1px solid #E5E7EB;
+    border-radius: 6px;
+    background: #fff;
+    color: #6B7280;
+    font-size: .8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: .15s;
+}
+
+.quickAddBtnActive {
+    background: #FEF2F2;
+    border-color: #FECACA;
+    color: #991B1B;
+}
+
+.totalRefillRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    background: #FEF2F2;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: .9rem;
+}
+
+.totalAfterLabel {
+    color: #991B1B;
+}
+
+.totalAfterValue {
+    color: #111827;
+}
+
+/* Success / Error Dialogs */
+.dialogModal {
+    background: #fff;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 360px;
+    box-shadow: 0 24px 64px rgba(0, 0, 0, .18);
+    display: flex;
+    flex-direction: column;
+    padding: 2.5rem 2rem 2rem 2rem;
+    text-align: center;
+    animation: scaleIn .2s cubic-bezier(.34, 1.4, .64, 1);
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.dialogIconWrap {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem auto;
+}
+
+.dialogIconSuccess {
+    background: #ECFDF5;
+    color: #059669;
+}
+
+.dialogIconError {
+    background: #FEF2F2;
+    color: #DC2626;
+}
+
+.dialogTitle {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: #111827;
+    margin-bottom: .5rem;
+}
+
+.dialogDesc {
+    font-size: .9rem;
+    color: #6B7280;
+    line-height: 1.5;
+    margin-bottom: 2rem;
+}
+
+.dialogBtn {
+    background: #991B1B;
+    color: white;
+    border: none;
+    padding: .75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: .95rem;
+    cursor: pointer;
+    width: 100%;
+    transition: .15s;
+}
+
+.dialogBtn:hover {
+    background: #7F1D1D;
+}
+
+.dialogLinkBtn {
+    background: none;
+    border: none;
+    color: #6B7280;
+    font-weight: 600;
+    font-size: .85rem;
+    margin-top: 1rem;
+    cursor: pointer;
+}
+
+.dialogLinkBtn:hover {
+    color: #111827;
+}
+
 /* ─── Responsive ───────────────────────────────────────────────────────────── */
 @media (max-width: 1024px) {
     .statsGrid {
