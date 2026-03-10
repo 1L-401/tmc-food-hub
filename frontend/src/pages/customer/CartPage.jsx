@@ -43,7 +43,7 @@ function CartPage() {
                     <div className="container-lg">
 
                         {/* Breadcrumbs */}
-                        <div className={styles.pageHeader} data-aos="fade-up">
+                        <div className={styles.pageHeader}>
                             <div className={styles.breadcrumbs}>
                                 <Link to="/">Home</Link>
                                 <span className="mx-2">/</span>
@@ -60,12 +60,12 @@ function CartPage() {
                         </div>
 
                         {cartItems.length === 0 ? (
-                            <div className={styles.emptyCart} data-aos="fade-up" data-aos-delay="100">
+                            <div className={styles.emptyCart}>
                                 <p>You haven't added any items yet.</p>
                                 <Link to="/menu" className={styles.browseBtn}>Browse Menu</Link>
                             </div>
                         ) : (
-                            <div className="row" data-aos="fade-up" data-aos-delay="100">
+                            <div className="row">
 
                                 {/* Left Column — Cart Items */}
                                 <div className="col-lg-7 mb-4 mb-lg-0">

@@ -80,7 +80,7 @@ function CheckoutPage() {
                     <div className="container-lg">
 
                         {/* Header */}
-                        <div className={styles.pageHeader} data-aos="fade-up">
+                        <div className={styles.pageHeader}>
                             <div className={styles.breadcrumbs}>
                                 <Link to="/">Home</Link>
                                 <span className="mx-2">/</span>
@@ -92,7 +92,7 @@ function CheckoutPage() {
                             <p className={styles.subtitle}>Review your details and finalize payment.</p>
                         </div>
 
-                        <div className="row" data-aos="fade-up" data-aos-delay="100">
+                        <div className="row">
 
                             {/* Left Column */}
                             <div className="col-lg-7 mb-4 mb-lg-0">

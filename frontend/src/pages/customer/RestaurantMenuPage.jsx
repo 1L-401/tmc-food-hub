@@ -82,14 +82,14 @@ function RestaurantMenuPage() {
                     <div className="container-lg">
 
                         {/* Breadcrumbs */}
-                        <div className={styles.breadcrumbs} data-aos="fade-down">
+                        <div className={styles.breadcrumbs}>
                             <Link to="/">Home</Link> <span className="mx-2">/</span>
                             <Link to="/menu">Restaurants</Link> <span className="mx-2">/</span>
                             <span className={styles.current}>{store.name}</span>
                         </div>
 
                         {/* Restaurant Header */}
-                        <div className={styles.restaurantHeader} data-aos="fade-up">
+                        <div className={styles.restaurantHeader}>
                             <img src={store.logo} alt={store.name} className={styles.restaurantLogo} />
                             <div className={styles.restaurantInfo}>
                                 <div className={styles.restaurantCategory}>{store.cuisine}</div>
@@ -105,7 +105,7 @@ function RestaurantMenuPage() {
                         </div>
 
                         {/* Menu Navigation Tabs */}
-                        <div className={styles.menuNav} data-aos="fade-up" data-aos-delay="100">
+                        <div className={styles.menuNav}>
                             <div className={styles.menuTabs}>
                                 {tabs.map(tab => (
                                     <button
@@ -130,7 +130,7 @@ function RestaurantMenuPage() {
 
                         <div className="row mt-4">
                             {/* Sidebar Options (Popular/Filters) */}
-                            <div className="col-lg-3" data-aos="fade-right" data-aos-delay="200">
+                            <div className="col-lg-3">
                                 <h4 className="mb-4 fw-bold">Popular</h4>
                                 <div className={styles.sidebar}>
                                     <div className={styles.filterGroupTitle}>Filters</div>
@@ -177,7 +177,7 @@ function RestaurantMenuPage() {
                             </div>
 
                             {/* Menu Items Grid */}
-                            <div className="col-lg-9" data-aos="fade-up" data-aos-delay="300">
+                            <div className="col-lg-9">
                                 <div className={styles.menuGrid}>
                                     {filteredItems.map(item => (
                                         <div className={styles.menuCard} key={item.id}>
@@ -216,7 +216,7 @@ function RestaurantMenuPage() {
                         </div>
 
                         {/* Reviews & Feedbacks section */}
-                        <div className={styles.reviewsSection} data-aos="fade-up">
+                        <div className={styles.reviewsSection}>
                             <div className={styles.sectionHeader}>
                                 <div>
                                     <h2 className={styles.sectionTitle}>Reviews & Feedbacks</h2>
@@ -305,7 +305,7 @@ function RestaurantMenuPage() {
                         </div>
 
                         {/* Similar Restaurants */}
-                        <div className={styles.similarSection} data-aos="fade-up">
+                        <div className={styles.similarSection}>
                             <h2 className={styles.sectionTitle} style={{ marginBottom: '1.5rem' }}>Similar Restaurants</h2>
                             <div className={styles.similarGrid}>
                                 {similarStores.map(similar => (

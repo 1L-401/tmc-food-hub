@@ -121,7 +121,7 @@ function MyOrdersPage() {
                 <main className={styles.myOrdersPage}>
                     <div className="container-lg">
                         {/* Header */}
-                        <div className={styles.pageHeader} data-aos="fade-up">
+                        <div className={styles.pageHeader}>
                             <div className={styles.breadcrumbs}>
                                 <Link to="/">Home</Link>
                                 <span className="mx-2">/</span>
@@ -132,7 +132,7 @@ function MyOrdersPage() {
                         </div>
 
                         {/* Tabs */}
-                        <div className={styles.tabBar} data-aos="fade-up" data-aos-delay="100">
+                        <div className={styles.tabBar}>
                             {TABS.map(t => (
                                 <button
                                     key={t.key}
@@ -146,7 +146,7 @@ function MyOrdersPage() {
                         </div>
 
                         {/* Orders list */}
-                        <div className={styles.ordersList} data-aos="fade-up" data-aos-delay="200">
+                        <div className={styles.ordersList}>
                             {displayed.length === 0 ? (
                                 <div className={styles.emptyState}>
                                     <Package size={48} strokeWidth={1.5} color="#D1D5DB" />

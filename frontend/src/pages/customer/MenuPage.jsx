@@ -82,13 +82,13 @@ function MenuPage() {
                     <div className="container-lg">
 
                         {/* Breadcrumbs */}
-                        <div className={styles.breadcrumbs} data-aos="fade-down">
+                        <div className={styles.breadcrumbs}>
                             <Link to="/">Home</Link> <span className="mx-2">/</span>
                             <span className={styles.current}>Restaurants</span>
                         </div>
 
                         {/* Top Search Bar */}
-                        <div className={styles.topSearchBarWrapper} data-aos="fade-up">
+                        <div className={styles.topSearchBarWrapper}>
                             <div className={styles.topSearchInputFull}>
                                 <Search className={styles.searchIcon} size={18} />
                                 <input
@@ -104,7 +104,7 @@ function MenuPage() {
                         <div className="row mt-4">
 
                             {/* ── Sidebar filters ── */}
-                            <div className="col-lg-3 mb-4 mb-lg-0" data-aos="fade-right" data-aos-delay="100">
+                            <div className="col-lg-3 mb-4 mb-lg-0">
                                 <div className={styles.sidebar}>
                                     <div className={styles.filterHeader}>
                                         <span>Filters</span>
@@ -171,7 +171,7 @@ function MenuPage() {
                             </div>
 
                             {/* ── Main Content ── */}
-                            <div className="col-lg-9" data-aos="fade-up" data-aos-delay="200">
+                            <div className="col-lg-9">
 
                                 {/* Cuisines Carousel */}
                                 <h3 className={styles.sectionTitleMain}>Cuisines</h3>

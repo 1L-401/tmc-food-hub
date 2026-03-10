@@ -64,9 +64,9 @@ function ProfilePage() {
                 <div className={styles.profileBody}>
 
                     {/* ── Identity row ── */}
-                    <div className={styles.identityRow} data-aos="fade-up" data-aos-duration="600">
+                    <div className={styles.identityRow}>
 
-                        <div className={styles.avatarCircle} data-aos="zoom-in" data-aos-delay="100">
+                        <div className={styles.avatarCircle}>
                             {getInitials(user?.name)}
                         </div>
 
@@ -101,7 +101,7 @@ function ProfilePage() {
                     <div className={styles.cardsGrid}>
 
                         {/* Personal Info */}
-                        <div className={styles.infoCard} data-aos="fade-up" data-aos-delay="100">
+                        <div className={styles.infoCard}>
                             <div className={styles.cardHeader}>
                                 <div className={styles.cardIcon}><i className="bi bi-person-badge" /></div>
                                 <div>
@@ -118,7 +118,7 @@ function ProfilePage() {
                         </div>
 
                         {/* Account Security */}
-                        <div className={styles.infoCard} data-aos="fade-up" data-aos-delay="200">
+                        <div className={styles.infoCard}>
                             <div className={styles.cardHeader}>
                                 <div className={styles.cardIcon}><i className="bi bi-shield-check" /></div>
                                 <div>
@@ -140,7 +140,7 @@ function ProfilePage() {
                         </div>
 
                         {/* Delivery Information */}
-                        <div className={`${styles.infoCard} ${styles.cardFull}`} data-aos="fade-up" data-aos-delay="300">
+                        <div className={`${styles.infoCard} ${styles.cardFull}`}>
                             <div className={styles.cardHeader}>
                                 <div className={styles.cardIcon}><i className="bi bi-geo-alt" /></div>
                                 <div>
@@ -156,7 +156,7 @@ function ProfilePage() {
 
                         {/* Restaurant Info – Partners only */}
                         {user?.role === 'Partner' && (
-                            <div className={`${styles.infoCard} ${styles.cardFull}`} data-aos="fade-up" data-aos-delay="400">
+                            <div className={`${styles.infoCard} ${styles.cardFull}`}>
                                 <div className={styles.cardHeader}>
                                     <div className={styles.cardIcon}><i className="bi bi-shop" /></div>
                                     <div>

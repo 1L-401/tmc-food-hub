@@ -21,11 +21,11 @@
   --nav-color: #fff;
   --nav-hover-color: #1f6bff;
   --dropdown-bg: #ffffff;
-  --dropdown-color: #951A0C;
-  --dropdown-hover-bg: rgba(255, 255, 255, 0.15);
+  --dropdown-color: #ffffff;
+  --dropdown-hover-bg: #f3f4f6;
   --nav-inverse: #000000;
   --nav-inverse-alt: #ffffff;
-  --nav-text: #ffffff;
+  --nav-text: #111827;
   --bs-icon-container: #e6f3e6;
 }
 
@@ -474,9 +474,10 @@ h6 {
   --services-summary-color: rgba(226, 232, 240, 0.92);
   --nav-bg: #1a1a1a;
   --nav-color: #1a1a1a;
-  --dropdown-bg: #1a1a1a;
-  --dropdown-color: #951A0C;
-  --dropdown-hover-bg: rgba(255, 255, 255, 0.15);
+  --dropdown-bg: #1f2937;
+  --dropdown-color: #1f2937;
+  --dropdown-hover-bg: #374151;
+  --nav-text: #f3f4f6;
   --bs-card-bg: #1e1e1e;
   --bs-icon-container: #1b281b;
 }

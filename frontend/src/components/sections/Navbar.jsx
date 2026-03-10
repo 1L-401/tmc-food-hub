@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react';
 import { ThemeContext } from '../ui/ThemeContext';
 import { CartContext } from '../ui/CartContext';
-import { Sun, Moon, Menu, ShoppingCart, ClipboardList } from 'lucide-react';
+import { Sun, Moon, Menu, ShoppingCart, ClipboardList, User, LogOut, X } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { navigationItems } from '../../constants/navigation';
 import { useNavbarLogic } from '../../hooks/useNavbarLogic';
@@ -186,6 +186,36 @@ function Navbar() {
             transform: none !important;
             box-shadow: none !important;
           }
+          .user-dropdown-menu {
+            background-color: ${isDarkMode ? '#1f2937' : '#ffffff'} !important;
+            border: 1px solid ${isDarkMode ? '#374151' : '#e5e7eb'} !important;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
+            padding: 0.5rem !important;
+            min-width: 200px !important;
+          }
+          .user-dropdown-item {
+            color: ${isDarkMode ? '#f3f4f6' : '#111827'} !important;
+            border-radius: 6px !important;
+            padding: 0.5rem 1rem !important;
+            transition: background-color 0.15s ease-in-out;
+            width: 100% !important;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: transparent !important;
+            border: none;
+            text-align: left;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+          }
+          .user-dropdown-item:hover {
+            background-color: ${isDarkMode ? '#374151' : '#f3f4f6'} !important;
+            color: ${isDarkMode ? '#ffffff' : '#000000'} !important;
+          }
+          .user-dropdown-item.text-danger:hover {
+            background-color: #FEE2E2 !important;
+            color: #DC2626 !important;
+          }
         `}
       </style>
       <header className={`fbs__net-navbar navbar navbar-expand-lg fixed-top ${isDarkMode ? 'dark' : 'light'} ${isScrolled || isDarkMode || !isHomePage ? 'active shadow-sm' : ''}`} style={{ padding: '0.75rem 0', backgroundColor: isDarkMode ? '#111827' : '#FFFFFF', borderBottom: '1px solid #E5E7EB' }}>
@@ -206,38 +236,39 @@ function Navbar() {
             {isAuthenticated ? (
               <div className="nav-item dropdown">
                 <button
-                  className="btn custom-nav-btn d-flex align-items-center justify-content-center gap-2"
+                  className="custom-nav-btn d-flex align-items-center justify-content-center"
                   id="userDropdown"
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                   style={{
                     border: '1px solid #D1D5DB',
-                    padding: '0 1.25rem',
+                    padding: 0,
                     height: '42px',
+                    width: '42px',
                     borderRadius: '8px',
-                    fontSize: '15px',
-                    fontWeight: 500,
                     backgroundColor: 'transparent',
-                    color: isDarkMode ? '#FFF' : '#111827'
+                    color: isDarkMode ? '#FFF' : '#111827',
+                    boxSizing: 'border-box'
                   }}
+                  title={`Hi, ${user?.name?.split(' ')[0] || 'User'}`}
                 >
-                  Hi, {user?.name?.split(' ')[0] || 'User'}
+                  <User size={20} />
                 </button>
-                <ul className={`dropdown-menu dropdown-menu-end shadow-sm ${isDarkMode ? 'dropdown-menu-dark' : ''}`} aria-labelledby="userDropdown" style={{ border: 'none', borderRadius: '8px', marginTop: '0.5rem' }}>
+                <ul className={`dropdown-menu dropdown-menu-end shadow-sm user-dropdown-menu`} aria-labelledby="userDropdown">
                   <li>
-                    <Link className="dropdown-item d-flex align-items-center gap-2" to="/profile" style={{ padding: '0.5rem 1rem' }}>
+                    <Link className="dropdown-item user-dropdown-item" to="/profile">
                       Profile
                     </Link>
                   </li>
                   <li>
-                    <button className="dropdown-item d-flex align-items-center gap-2" onClick={toggleTheme} style={{ padding: '0.5rem 1rem' }}>
+                    <button className="dropdown-item user-dropdown-item" onClick={toggleTheme}>
                       {isDarkMode ? <Sun size={16} /> : <Moon size={16} />}
                       {isDarkMode ? 'Light Mode' : 'Dark Mode'}
                     </button>
                   </li>
-                  <li><hr className="dropdown-divider" /></li>
+                  <li><hr className="dropdown-divider" style={{ margin: '0.25rem 0', borderColor: isDarkMode ? '#374151' : '#e5e7eb' }} /></li>
                   <li>
-                    <button className="dropdown-item text-danger d-flex align-items-center gap-2" onClick={() => setShowLogoutModal(true)} style={{ padding: '0.5rem 1rem' }}>
+                    <button className="dropdown-item user-dropdown-item text-danger" onClick={() => setShowLogoutModal(true)}>
                       Logout
                     </button>
                   </li>
@@ -338,21 +369,50 @@ function Navbar() {
         </div>
       </header>
 
-      {/* Logout Confirmation Modal */}
+      {/* Logout Confirmation Modal (Modern Design) */}
       {showLogoutModal && (
-        <div className="modal fade show" style={{ display: 'block', backgroundColor: 'rgba(0,0,0,0.5)' }} tabIndex="-1" role="dialog">
-          <div className="modal-dialog modal-dialog-centered" role="document">
-            <div className={`modal-content ${isDarkMode ? 'bg-dark text-white border-secondary' : ''}`} style={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)' }}>
-              <div className="modal-header border-bottom-0 pb-0">
-                <h5 className="modal-title fw-bold">Sign Out</h5>
-                <button type="button" className={`btn-close ${isDarkMode ? 'btn-close-white' : ''}`} onClick={() => setShowLogoutModal(false)} aria-label="Close"></button>
+        <div className="modal fade show" style={{ display: 'block', backgroundColor: 'rgba(0,0,0,0.6)', zIndex: 1060, backdropFilter: 'blur(4px)' }} tabIndex="-1" role="dialog">
+          <div className="modal-dialog modal-dialog-centered" role="document" style={{ maxWidth: '400px' }}>
+            <div className={`modal-content text-center p-4 ${isDarkMode ? 'bg-dark border-secondary' : ''}`} style={{ borderRadius: '24px', border: 'none', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)' }}>
+
+              <button
+                type="button"
+                onClick={() => setShowLogoutModal(false)}
+                style={{ position: 'absolute', top: '16px', right: '16px', background: 'transparent', border: 'none', color: isDarkMode ? '#9CA3AF' : '#6B7280', padding: '8px', cursor: 'pointer', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'background-color 0.2s' }}
+                onMouseOver={(e) => e.currentTarget.style.backgroundColor = isDarkMode ? '#374151' : '#F3F4F6'}
+                onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+              >
+                <X size={20} />
+              </button>
+
+              <div style={{ width: '64px', height: '64px', backgroundColor: '#FEE2E2', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.25rem', color: '#DC2626' }}>
+                <LogOut size={32} />
               </div>
-              <div className="modal-body py-4">
-                <p className="mb-0 text-center" style={{ fontSize: '1.1rem' }}>Are you sure you want to log out from TMC Food Hub?</p>
-              </div>
-              <div className="modal-footer border-top-0 pt-0 d-flex justify-content-center gap-2">
-                <button type="button" className="btn btn-light px-4" onClick={() => setShowLogoutModal(false)} style={{ borderRadius: '8px', fontWeight: 500 }}>Cancel</button>
-                <button type="button" className="btn btn-danger px-4" onClick={() => { setShowLogoutModal(false); logout(); navigate('/'); }} style={{ backgroundColor: '#991B1B', border: 'none', borderRadius: '8px', fontWeight: 500 }}>Yes, Logout</button>
+
+              <h4 className="fw-bold mb-2" style={{ color: isDarkMode ? '#F9FAFB' : '#111827', fontSize: '1.25rem' }}>Sign Out</h4>
+              <p style={{ color: isDarkMode ? '#D1D5DB' : '#6B7280', fontSize: '0.95rem', marginBottom: '1.75rem', padding: '0 10px' }}>
+                Are you sure you want to log out from TMC Food Hub?
+              </p>
+
+              <div className="d-flex flex-column gap-2">
+                <button
+                  className="btn w-100 fw-bold d-flex align-items-center justify-content-center border-0"
+                  onClick={() => { setShowLogoutModal(false); logout(); navigate('/'); }}
+                  style={{ backgroundColor: '#991B1B', color: 'white', padding: '0.8rem', borderRadius: '12px', fontSize: '1rem', transition: 'transform 0.1s' }}
+                  onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.02)'}
+                  onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                >
+                  Yes, Logout
+                </button>
+                <button
+                  className="btn w-100 fw-bold d-flex align-items-center justify-content-center"
+                  onClick={() => setShowLogoutModal(false)}
+                  style={{ backgroundColor: 'transparent', color: isDarkMode ? '#F9FAFB' : '#111827', padding: '0.8rem', borderRadius: '12px', fontSize: '1rem', border: `1px solid ${isDarkMode ? '#4B5563' : '#D1D5DB'}`, transition: 'background-color 0.2s' }}
+                  onMouseOver={(e) => e.currentTarget.style.backgroundColor = isDarkMode ? '#374151' : '#F9FAFB'}
+                  onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                >
+                  Cancel
+                </button>
               </div>
             </div>
           </div>
