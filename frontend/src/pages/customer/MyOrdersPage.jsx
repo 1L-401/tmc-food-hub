@@ -8,6 +8,7 @@ import { useOrders } from '../../context/OrderContext';
 import Navbar from '../../components/sections/Navbar';
 import Footer from '../../components/sections/Footer';
 import BackToTop from '../../components/ui/BackToTop';
+import { useAuth } from '../../context/AuthContext';
 import styles from './MyOrdersPage.module.css';
 
 const TABS = [
@@ -96,11 +97,19 @@ function OrderCard({ order, navigate }) {
 }
 
 function MyOrdersPage() {
+    const { user, isAuthenticated, loading } = useAuth();
     const { activeOrders, completedOrders, cancelledOrders } = useOrders();
     const [tab, setTab] = useState('active');
     const navigate = useNavigate();
 
-    useEffect(() => { window.scrollTo(0, 0); }, []);
+    useEffect(() => {
+        window.scrollTo(0, 0);
+        if (!loading && !isAuthenticated) {
+            navigate('/login');
+        }
+    }, [isAuthenticated, loading, navigate]);
+
+    if (loading || !isAuthenticated) return null;
 
     const displayed = tab === 'active' ? activeOrders : tab === 'completed' ? completedOrders : cancelledOrders;
     const counts = { active: activeOrders.length, completed: completedOrders.length, cancelled: cancelledOrders.length };
@@ -112,7 +121,7 @@ function MyOrdersPage() {
                 <main className={styles.myOrdersPage}>
                     <div className="container-lg">
                         {/* Header */}
-                        <div className={styles.pageHeader} data-aos="fade-up">
+                        <div className={styles.pageHeader}>
                             <div className={styles.breadcrumbs}>
                                 <Link to="/">Home</Link>
                                 <span className="mx-2">/</span>
@@ -123,7 +132,7 @@ function MyOrdersPage() {
                         </div>
 
                         {/* Tabs */}
-                        <div className={styles.tabBar} data-aos="fade-up" data-aos-delay="100">
+                        <div className={styles.tabBar}>
                             {TABS.map(t => (
                                 <button
                                     key={t.key}
@@ -137,7 +146,7 @@ function MyOrdersPage() {
                         </div>
 
                         {/* Orders list */}
-                        <div className={styles.ordersList} data-aos="fade-up" data-aos-delay="200">
+                        <div className={styles.ordersList}>
                             {displayed.length === 0 ? (
                                 <div className={styles.emptyState}>
                                     <Package size={48} strokeWidth={1.5} color="#D1D5DB" />
