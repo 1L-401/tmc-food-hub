@@ -1,4 +1,4 @@
-import { createContext, useReducer, useCallback, useMemo, useState } from 'react';
+import { createContext, useReducer, useCallback, useMemo, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UserPlus, X } from 'lucide-react';
 import { useNotification } from '../../context/NotificationContext';
@@ -40,8 +40,21 @@ const cartReducer = (state, action) => {
   }
 };
 
+const initCart = () => {
+  try {
+    const localData = localStorage.getItem('tmc_cart');
+    return localData ? JSON.parse(localData) : [];
+  } catch (e) {
+    return [];
+  }
+};
+
 export function CartProvider({ children }) {
-  const [cartItems, dispatch] = useReducer(cartReducer, []);
+  const [cartItems, dispatch] = useReducer(cartReducer, [], initCart);
+
+  useEffect(() => {
+    localStorage.setItem('tmc_cart', JSON.stringify(cartItems));
+  }, [cartItems]);
   const { showNotification } = useNotification();
   const { isAuthenticated } = useAuth();
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
