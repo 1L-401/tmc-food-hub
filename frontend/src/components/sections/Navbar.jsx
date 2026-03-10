@@ -11,7 +11,7 @@ import tmcLogo from '../../assets/imgs/tmc-foodhub-logo.svg';
 
 function Navbar() {
   const { isDarkMode, toggleTheme } = useContext(ThemeContext);
-  const { cartCount } = useContext(CartContext);
+  const { cartCount, cartItems, cartSubtotal } = useContext(CartContext);
   const { user, isAuthenticated, logout } = useAuth();
   const { activeOrders } = useOrders();
   const location = useLocation();
@@ -186,12 +186,17 @@ function Navbar() {
             transform: none !important;
             box-shadow: none !important;
           }
-          .user-dropdown-menu {
+          .fbs__net-navbar .user-dropdown-menu {
             background-color: ${isDarkMode ? '#1f2937' : '#ffffff'} !important;
             border: 1px solid ${isDarkMode ? '#374151' : '#e5e7eb'} !important;
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
             padding: 0.5rem !important;
             min-width: 200px !important;
+            left: auto !important;
+            right: 0 !important;
+            top: 100% !important;
+            transform: none !important;
+            margin-top: 0.5rem !important;
           }
           .user-dropdown-item {
             color: ${isDarkMode ? '#f3f4f6' : '#111827'} !important;
@@ -234,7 +239,7 @@ function Navbar() {
           {/* Desktop right buttons */}
           <div className="d-none d-lg-flex align-items-center gap-2 gap-xl-3">
             {isAuthenticated ? (
-              <div className="nav-item dropdown">
+              <div className="nav-item dropdown" style={{ position: 'relative' }}>
                 <button
                   className="custom-nav-btn d-flex align-items-center justify-content-center"
                   id="userDropdown"
@@ -293,10 +298,52 @@ function Navbar() {
                   <ClipboardList size={20} />
                   {activeOrders.length > 0 && <span style={{ position: 'absolute', top: '-8px', right: '-8px', backgroundColor: '#991B1B', color: 'white', borderRadius: '50%', width: '22px', height: '22px', fontSize: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>{activeOrders.length}</span>}
                 </button>
-                <button className="custom-nav-btn d-flex align-items-center justify-content-center" onClick={() => navigate('/cart')} style={{ backgroundColor: '#F59E0B', color: 'white', position: 'relative', border: '1px solid transparent', height: '42px', width: '42px', borderRadius: '8px', cursor: 'pointer', padding: 0, boxSizing: 'border-box' }}>
-                  <ShoppingCart size={20} />
-                  {cartCount > 0 && <span style={{ position: 'absolute', top: '-8px', right: '-8px', backgroundColor: '#111827', color: 'white', borderRadius: '50%', width: '22px', height: '22px', fontSize: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>{cartCount}</span>}
-                </button>
+                <div className="nav-item dropdown" style={{ position: 'relative' }}>
+                  <button className="custom-nav-btn d-flex align-items-center justify-content-center" onClick={() => navigate('/cart')} style={{ backgroundColor: '#F59E0B', color: 'white', position: 'relative', border: '1px solid transparent', height: '42px', width: '42px', borderRadius: '8px', cursor: 'pointer', padding: 0, boxSizing: 'border-box' }}>
+                    <ShoppingCart size={20} />
+                    {cartCount > 0 && <span style={{ position: 'absolute', top: '-8px', right: '-8px', backgroundColor: '#111827', color: 'white', borderRadius: '50%', width: '22px', height: '22px', fontSize: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>{cartCount}</span>}
+                  </button>
+                  <div className={`dropdown-menu dropdown-menu-end shadow user-dropdown-menu p-0`} style={{ width: '320px', overflow: 'hidden', cursor: 'default' }} onClick={(e) => e.stopPropagation()}>
+                    <div className="p-3 border-bottom" style={{ borderColor: isDarkMode ? '#374151' : '#e5e7eb' }}>
+                      <h6 className="mb-0 fw-bold" style={{ color: isDarkMode ? '#F9FAFB' : '#111827' }}>My Cart ({cartCount} items)</h6>
+                    </div>
+                    <div style={{ maxHeight: '300px', overflowY: 'auto' }}>
+                      {cartItems.length === 0 ? (
+                        <div className="p-4 text-center">
+                          <ShoppingCart size={40} className="mb-2" style={{ color: isDarkMode ? '#4B5563' : '#9CA3AF' }} />
+                          <p className="mb-0" style={{ color: isDarkMode ? '#D1D5DB' : '#6B7280', fontSize: '0.9rem' }}>Your cart is currently empty.</p>
+                        </div>
+                      ) : (
+                        <ul className="list-unstyled mb-0 w-100">
+                          {cartItems.map((item, index) => (
+                            <li key={index} className="p-3 border-bottom d-flex align-items-center gap-3 w-100" style={{ borderColor: isDarkMode ? '#374151' : '#e5e7eb', backgroundColor: isDarkMode ? '#1f2937' : '#ffffff', transition: 'background-color 0.2s' }} onMouseOver={(e) => e.currentTarget.style.backgroundColor = isDarkMode ? '#374151' : '#f9fafb'} onMouseOut={(e) => e.currentTarget.style.backgroundColor = isDarkMode ? '#1f2937' : '#ffffff'}>
+                              <img src={item.image} alt={item.title} style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '8px' }} />
+                              <div className="flex-grow-1 overflow-hidden">
+                                <h6 className="mb-0 text-truncate" style={{ fontSize: '0.9rem', color: isDarkMode ? '#F9FAFB' : '#111827', fontWeight: 600 }}>{item.title}</h6>
+                                <div className="d-flex justify-content-between align-items-center mt-1">
+                                  <span style={{ fontSize: '0.85rem', color: isDarkMode ? '#9CA3AF' : '#6B7280' }}>Qty: {item.quantity}</span>
+                                  <span style={{ fontSize: '0.9rem', fontWeight: 600, color: '#991B1B' }}>₱{Number(item.price * item.quantity).toFixed(2)}</span>
+                                </div>
+                              </div>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                    {cartItems.length > 0 && (
+                      <div className="p-3" style={{ backgroundColor: isDarkMode ? '#111827' : '#f9fafb' }}>
+                        <div className="d-flex justify-content-between mb-3">
+                          <span style={{ fontWeight: 600, color: isDarkMode ? '#D1D5DB' : '#4B5563' }}>Subtotal:</span>
+                          <span style={{ fontWeight: 'bold', color: isDarkMode ? '#F9FAFB' : '#111827', fontSize: '1.1rem' }}>₱{Number(cartSubtotal).toFixed(2)}</span>
+                        </div>
+                        <div className="d-flex gap-2">
+                          <button className="btn w-50" onClick={() => navigate('/cart')} style={{ backgroundColor: 'transparent', border: `1px solid ${isDarkMode ? '#4B5563' : '#D1D5DB'}`, color: isDarkMode ? '#F9FAFB' : '#111827', borderRadius: '8px', fontSize: '0.9rem', fontWeight: 600 }}>View Cart</button>
+                          <button className="btn w-50" onClick={() => navigate('/checkout')} style={{ backgroundColor: '#991B1B', color: 'white', borderRadius: '8px', fontSize: '0.9rem', fontWeight: 600 }}>Checkout</button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
               </>
             )}
           </div>
