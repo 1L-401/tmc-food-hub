@@ -8,6 +8,7 @@ import { useOrders } from '../../context/OrderContext';
 import Navbar from '../../components/sections/Navbar';
 import Footer from '../../components/sections/Footer';
 import BackToTop from '../../components/ui/BackToTop';
+import { useAuth } from '../../context/AuthContext';
 import styles from './MyOrdersPage.module.css';
 
 const TABS = [
@@ -96,11 +97,19 @@ function OrderCard({ order, navigate }) {
 }
 
 function MyOrdersPage() {
+    const { user, isAuthenticated, loading } = useAuth();
     const { activeOrders, completedOrders, cancelledOrders } = useOrders();
     const [tab, setTab] = useState('active');
     const navigate = useNavigate();
 
-    useEffect(() => { window.scrollTo(0, 0); }, []);
+    useEffect(() => {
+        window.scrollTo(0, 0);
+        if (!loading && !isAuthenticated) {
+            navigate('/login');
+        }
+    }, [isAuthenticated, loading, navigate]);
+
+    if (loading || !isAuthenticated) return null;
 
     const displayed = tab === 'active' ? activeOrders : tab === 'completed' ? completedOrders : cancelledOrders;
     const counts = { active: activeOrders.length, completed: completedOrders.length, cancelled: cancelledOrders.length };

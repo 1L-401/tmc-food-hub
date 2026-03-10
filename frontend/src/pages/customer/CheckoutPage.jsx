@@ -5,6 +5,9 @@ import gcashLogo from '../../assets/imgs/gcash-logo.png';
 import mayaLogo from '../../assets/imgs/maya-logo.jpg';
 import { CartContext } from '../../components/ui/CartContext';
 import { useOrders } from '../../context/OrderContext';
+import { useAuth } from '../../context/AuthContext';
+import { useNotification } from '../../context/NotificationContext';
+import { ShoppingBag, X } from 'lucide-react';
 import Navbar from '../../components/sections/Navbar';
 import Footer from '../../components/sections/Footer';
 import BackToTop from '../../components/ui/BackToTop';
@@ -12,6 +15,8 @@ import styles from './CheckoutPage.module.css';
 
 function CheckoutPage() {
     const { cartItems, cartSubtotal, clearCart } = useContext(CartContext);
+    const { user, isAuthenticated, loading } = useAuth();
+    const { showNotification } = useNotification();
     const { placeOrder } = useOrders();
     const navigate = useNavigate();
 
@@ -20,18 +25,51 @@ function CheckoutPage() {
     const [specialInstructions, setSpecialInstructions] = useState('');
     const [paymentMethod, setPaymentMethod] = useState('gcash');
 
+    const [error, setError] = useState('');
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
+    const [placedOrderId, setPlacedOrderId] = useState(null);
+
     useEffect(() => {
         window.scrollTo(0, 0);
-        if (cartItems.length === 0) {
+        if (cartItems.length === 0 && !showSuccessModal) {
             navigate('/cart');
         }
-    }, [cartItems.length, navigate]);
+        if (!loading && !isAuthenticated) {
+            navigate('/login', { state: { from: '/checkout' } });
+        }
+    }, [cartItems.length, isAuthenticated, loading, navigate, showSuccessModal]);
 
     const deliveryFee = 3.00;
     const discount = 5.00;
     const totalAmount = cartSubtotal + deliveryFee - discount;
 
-    if (cartItems.length === 0) return null;
+    const handlePlaceOrder = () => {
+        if (!contactNumber.trim()) {
+            setError('Contact number is required.');
+            return;
+        }
+
+        const storeName = cartItems[0]?.storeName || 'Restaurant';
+        const order = placeOrder({
+            items: cartItems.map(i => ({ id: i.id, name: i.title, quantity: i.quantity, price: i.price, image: i.image })),
+            restaurant: storeName,
+            subtotal: cartSubtotal,
+            deliveryFee,
+            discount,
+            total: totalAmount,
+            paymentMethod,
+            deliveryAddress: '123 Quezon Avenue, Unit 4B, Brgy. South Triangle, Quezon City, Metro Manila',
+            contactNumber,
+            specialInstructions,
+        });
+
+        setPlacedOrderId(order.id);
+        clearCart();
+        showNotification('Order placed successfully!', 'success');
+        setShowSuccessModal(true);
+    };
+
+    if (loading || !isAuthenticated || (cartItems.length === 0 && !showSuccessModal)) return null;
 
     return (
         <>
@@ -83,14 +121,18 @@ function CheckoutPage() {
                                     {/* Contact & Delivery Type */}
                                     <div className={styles.formRow}>
                                         <div className={styles.formGroup}>
-                                            <label className={styles.formLabel}>Contact Number</label>
+                                            <label className={styles.formLabel}>Contact Number <span style={{ color: '#DC2626' }}>*</span></label>
                                             <input
                                                 type="tel"
-                                                className={styles.formInput}
+                                                className={`${styles.formInput} ${error ? styles.inputError : ''}`}
                                                 placeholder="+63 000 000 0000"
                                                 value={contactNumber}
-                                                onChange={(e) => setContactNumber(e.target.value)}
+                                                onChange={(e) => {
+                                                    setContactNumber(e.target.value);
+                                                    if (error) setError('');
+                                                }}
                                             />
+                                            {error && <p className={styles.errorText} style={{ color: '#DC2626', fontSize: '0.75rem', marginTop: '0.25rem' }}>{error}</p>}
                                         </div>
                                         <div className={styles.formGroup}>
                                             <label className={styles.formLabel}>Delivery Type</label>
@@ -196,23 +238,7 @@ function CheckoutPage() {
                                         <span className={styles.totalValue}>${totalAmount.toFixed(2)}</span>
                                     </div>
 
-                                    <button className={styles.placeOrderBtn} onClick={() => {
-                                        const storeName = cartItems[0]?.storeName || 'Restaurant';
-                                        const order = placeOrder({
-                                            items: cartItems.map(i => ({ id: i.id, name: i.title, quantity: i.quantity, price: i.price, image: i.image })),
-                                            restaurant: storeName,
-                                            subtotal: cartSubtotal,
-                                            deliveryFee,
-                                            discount,
-                                            total: totalAmount,
-                                            paymentMethod,
-                                            deliveryAddress: '123 Quezon Avenue, Unit 4B, Brgy. South Triangle, Quezon City, Metro Manila',
-                                            contactNumber,
-                                            specialInstructions,
-                                        });
-                                        clearCart();
-                                        navigate(`/order-tracking?id=${order.id}`);
-                                    }}>Place Order</button>
+                                    <button className={styles.placeOrderBtn} onClick={handlePlaceOrder}>Place Order</button>
                                     <p className={styles.termsText}>
                                         By placing an order, you agree to TMC Foodhub's Terms and Conditions.
                                     </p>
@@ -226,6 +252,44 @@ function CheckoutPage() {
                 <Footer />
             </div>
             <BackToTop />
+
+            {/* Success Modal */}
+            {showSuccessModal && (
+                <div className="modal fade show" style={{ display: 'block', backgroundColor: 'rgba(0,0,0,0.6)', zIndex: 1060 }} tabIndex="-1">
+                    <div className="modal-dialog modal-dialog-centered">
+                        <div className="modal-content" style={{ borderRadius: '16px', border: 'none', overflow: 'hidden' }}>
+                            <div className="modal-body p-0">
+                                <div style={{ backgroundColor: '#10B981', padding: '3rem 2rem', textAlign: 'center', color: 'white' }}>
+                                    <div style={{ backgroundColor: 'rgba(255,255,255,0.2)', width: '80px', height: '80px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem' }}>
+                                        <ShoppingBag size={40} />
+                                    </div>
+                                    <h2 className="fw-bold mb-2">Order Placed!</h2>
+                                    <p className="mb-0 opacity-75">Your delicious meal is being prepared.</p>
+                                </div>
+                                <div className="p-4 text-center">
+                                    <p className="mb-4 text-muted">What would you like to do next?</p>
+                                    <div className="d-grid gap-3">
+                                        <button
+                                            className="btn btn-primary py-3 fw-bold"
+                                            style={{ backgroundColor: '#B91C1C', border: 'none', borderRadius: '12px' }}
+                                            onClick={() => navigate(`/order-tracking?id=${placedOrderId}`)}
+                                        >
+                                            Track My Order
+                                        </button>
+                                        <button
+                                            className="btn btn-outline-secondary py-3 fw-bold"
+                                            style={{ borderRadius: '12px' }}
+                                            onClick={() => navigate('/menu')}
+                                        >
+                                            Browse More Menu
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </>
     );
 }

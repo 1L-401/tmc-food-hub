@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { ThemeContext } from '../ui/ThemeContext';
 import { CartContext } from '../ui/CartContext';
 import { Sun, Moon, Menu, ShoppingCart, ClipboardList } from 'lucide-react';
@@ -17,6 +17,10 @@ function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
   const { isScrolled, isActive, handleNavClick } = useNavbarLogic(isDarkMode);
+
+  const isHomePage = location.pathname === '/';
+
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const closeMobileMenu = () => {
     const offcanvasElement = document.getElementById('fbs__net-navbars');
@@ -184,7 +188,7 @@ function Navbar() {
           }
         `}
       </style>
-      <header className={`fbs__net-navbar navbar navbar-expand-lg fixed-top ${isDarkMode ? 'dark' : 'light'} ${isScrolled || isDarkMode ? 'active shadow-sm' : ''}`} style={{ padding: '0.75rem 0', backgroundColor: isDarkMode ? '#111827' : '#FFFFFF', borderBottom: '1px solid #E5E7EB' }}>
+      <header className={`fbs__net-navbar navbar navbar-expand-lg fixed-top ${isDarkMode ? 'dark' : 'light'} ${isScrolled || isDarkMode || !isHomePage ? 'active shadow-sm' : ''}`} style={{ padding: '0.75rem 0', backgroundColor: isDarkMode ? '#111827' : '#FFFFFF', borderBottom: '1px solid #E5E7EB' }}>
         <div className="container-fluid px-4 px-xl-5 d-flex align-items-center justify-content-between" style={{ maxWidth: '1600px' }}>
           <Link className="navbar-brand" to="/" onClick={() => window.scrollTo(0, 0)}>
             <img src={tmcLogo} alt="TMC Food Hub banner" style={{ height: '60px', width: 'auto', objectFit: 'contain' }} />
@@ -200,14 +204,45 @@ function Navbar() {
           {/* Desktop right buttons */}
           <div className="d-none d-lg-flex align-items-center gap-2 gap-xl-3">
             {isAuthenticated ? (
-              <>
-                <Link to="/profile" className="btn custom-nav-btn custom-login-btn d-flex align-items-center justify-content-center" style={{ border: '1px solid #D1D5DB', padding: '0 1.25rem', height: '42px', borderRadius: '8px', fontSize: '15px', fontWeight: 500, boxSizing: 'border-box' }}>
+              <div className="nav-item dropdown">
+                <button
+                  className="btn custom-nav-btn d-flex align-items-center justify-content-center gap-2"
+                  id="userDropdown"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                  style={{
+                    border: '1px solid #D1D5DB',
+                    padding: '0 1.25rem',
+                    height: '42px',
+                    borderRadius: '8px',
+                    fontSize: '15px',
+                    fontWeight: 500,
+                    backgroundColor: 'transparent',
+                    color: isDarkMode ? '#FFF' : '#111827'
+                  }}
+                >
                   Hi, {user?.name?.split(' ')[0] || 'User'}
-                </Link>
-                <button onClick={() => { logout(); navigate('/'); }} className="btn custom-nav-btn d-flex align-items-center justify-content-center" style={{ backgroundColor: '#991B1B', color: 'white', padding: '0 1.25rem', height: '42px', borderRadius: '8px', fontSize: '15px', fontWeight: 500, border: '1px solid transparent', boxSizing: 'border-box' }}>
-                  Logout
                 </button>
-              </>
+                <ul className={`dropdown-menu dropdown-menu-end shadow-sm ${isDarkMode ? 'dropdown-menu-dark' : ''}`} aria-labelledby="userDropdown" style={{ border: 'none', borderRadius: '8px', marginTop: '0.5rem' }}>
+                  <li>
+                    <Link className="dropdown-item d-flex align-items-center gap-2" to="/profile" style={{ padding: '0.5rem 1rem' }}>
+                      Profile
+                    </Link>
+                  </li>
+                  <li>
+                    <button className="dropdown-item d-flex align-items-center gap-2" onClick={toggleTheme} style={{ padding: '0.5rem 1rem' }}>
+                      {isDarkMode ? <Sun size={16} /> : <Moon size={16} />}
+                      {isDarkMode ? 'Light Mode' : 'Dark Mode'}
+                    </button>
+                  </li>
+                  <li><hr className="dropdown-divider" /></li>
+                  <li>
+                    <button className="dropdown-item text-danger d-flex align-items-center gap-2" onClick={() => setShowLogoutModal(true)} style={{ padding: '0.5rem 1rem' }}>
+                      Logout
+                    </button>
+                  </li>
+                </ul>
+              </div>
             ) : (
               <>
                 <Link to="/login" className="btn custom-nav-btn custom-login-btn d-flex align-items-center justify-content-center" style={{ border: '1px solid #D1D5DB', padding: '0 1.25rem', height: '42px', borderRadius: '8px', fontSize: '15px', fontWeight: 500, boxSizing: 'border-box' }}>
@@ -216,19 +251,23 @@ function Navbar() {
                 <Link to="/signup" className="btn custom-nav-btn d-flex align-items-center justify-content-center" style={{ backgroundColor: '#991B1B', color: 'white', padding: '0 1.25rem', height: '42px', borderRadius: '8px', fontSize: '15px', fontWeight: 500, border: '1px solid transparent', boxSizing: 'border-box' }}>
                   Sign up
                 </Link>
+                <button className="custom-nav-btn d-flex align-items-center justify-content-center" onClick={toggleTheme} style={{ border: '1px solid #D1D5DB', backgroundColor: 'transparent', color: isDarkMode ? '#FFF' : '#111827', height: '42px', width: '42px', borderRadius: '8px', cursor: 'pointer', padding: 0, boxSizing: 'border-box' }}>
+                  {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
+                </button>
               </>
             )}
-            <button className="custom-nav-btn d-flex align-items-center justify-content-center" onClick={toggleTheme} style={{ border: '1px solid #D1D5DB', backgroundColor: 'transparent', color: isDarkMode ? '#FFF' : '#111827', height: '42px', width: '42px', borderRadius: '8px', cursor: 'pointer', padding: 0, boxSizing: 'border-box' }}>
-              {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
-            </button>
-            <button className="custom-nav-btn d-flex align-items-center justify-content-center" onClick={() => navigate('/my-orders')} style={{ backgroundColor: 'transparent', color: isDarkMode ? '#FFF' : '#111827', position: 'relative', border: '1px solid #D1D5DB', height: '42px', width: '42px', borderRadius: '8px', cursor: 'pointer', padding: 0, boxSizing: 'border-box' }}>
-              <ClipboardList size={20} />
-              {activeOrders.length > 0 && <span style={{ position: 'absolute', top: '-8px', right: '-8px', backgroundColor: '#991B1B', color: 'white', borderRadius: '50%', width: '22px', height: '22px', fontSize: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>{activeOrders.length}</span>}
-            </button>
-            <button className="custom-nav-btn d-flex align-items-center justify-content-center" onClick={() => navigate('/cart')} style={{ backgroundColor: '#F59E0B', color: 'white', position: 'relative', border: '1px solid transparent', height: '42px', width: '42px', borderRadius: '8px', cursor: 'pointer', padding: 0, boxSizing: 'border-box' }}>
-              <ShoppingCart size={20} />
-              {cartCount > 0 && <span style={{ position: 'absolute', top: '-8px', right: '-8px', backgroundColor: '#111827', color: 'white', borderRadius: '50%', width: '22px', height: '22px', fontSize: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>{cartCount}</span>}
-            </button>
+            {isAuthenticated && (
+              <>
+                <button className="custom-nav-btn d-flex align-items-center justify-content-center" onClick={() => navigate('/my-orders')} style={{ backgroundColor: 'transparent', color: isDarkMode ? '#FFF' : '#111827', position: 'relative', border: '1px solid #D1D5DB', height: '42px', width: '42px', borderRadius: '8px', cursor: 'pointer', padding: 0, boxSizing: 'border-box' }}>
+                  <ClipboardList size={20} />
+                  {activeOrders.length > 0 && <span style={{ position: 'absolute', top: '-8px', right: '-8px', backgroundColor: '#991B1B', color: 'white', borderRadius: '50%', width: '22px', height: '22px', fontSize: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>{activeOrders.length}</span>}
+                </button>
+                <button className="custom-nav-btn d-flex align-items-center justify-content-center" onClick={() => navigate('/cart')} style={{ backgroundColor: '#F59E0B', color: 'white', position: 'relative', border: '1px solid transparent', height: '42px', width: '42px', borderRadius: '8px', cursor: 'pointer', padding: 0, boxSizing: 'border-box' }}>
+                  <ShoppingCart size={20} />
+                  {cartCount > 0 && <span style={{ position: 'absolute', top: '-8px', right: '-8px', backgroundColor: '#111827', color: 'white', borderRadius: '50%', width: '22px', height: '22px', fontSize: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>{cartCount}</span>}
+                </button>
+              </>
+            )}
           </div>
 
           {/* Mobile toggle */}
@@ -247,14 +286,29 @@ function Navbar() {
               <ul className="navbar-nav mb-auto">{renderNavItems(true)}</ul>
               <div className="mt-4 px-2 d-flex flex-column gap-3">
                 {isAuthenticated ? (
-                  <>
-                    <Link to="/profile" className="btn custom-nav-btn custom-login-btn w-100 d-flex align-items-center justify-content-center" style={{ border: '1px solid #D1D5DB', padding: '0.6rem', borderRadius: '8px', fontSize: '15px', fontWeight: 500, boxSizing: 'border-box' }} onClick={closeMobileMenu}>
-                      Profile
-                    </Link>
-                    <button className="btn custom-nav-btn w-100 d-flex align-items-center justify-content-center" style={{ backgroundColor: '#991B1B', color: 'white', padding: '0.6rem', borderRadius: '8px', fontSize: '15px', fontWeight: 500, border: '1px solid transparent', boxSizing: 'border-box' }} onClick={() => { logout(); closeMobileMenu(); navigate('/'); }}>
-                      Logout
-                    </button>
-                  </>
+                  <div className="accordion" id="mobileUserAccordion">
+                    <div className="accordion-item" style={{ border: 'none', backgroundColor: 'transparent' }}>
+                      <h2 className="accordion-header">
+                        <button className={`accordion-button collapsed custom-nav-btn ${isDarkMode ? 'text-white bg-dark' : 'text-dark bg-light'}`} type="button" data-bs-toggle="collapse" data-bs-target="#collapseUser" aria-expanded="false" aria-controls="collapseUser" style={{ borderRadius: '8px', padding: '0.8rem 1rem', border: '1px solid #D1D5DB', fontWeight: 500 }}>
+                          Hi, {user?.name?.split(' ')[0] || 'User'}
+                        </button>
+                      </h2>
+                      <div id="collapseUser" className="accordion-collapse collapse" data-bs-parent="#mobileUserAccordion">
+                        <div className="accordion-body d-flex flex-column gap-2 p-2">
+                          <Link to="/profile" className="btn custom-nav-btn w-100 d-flex align-items-center justify-content-start gap-2" style={{ backgroundColor: 'transparent', color: isDarkMode ? '#FFF' : '#111827', padding: '0.6rem 1rem', border: 'none', textAlign: 'left' }} onClick={closeMobileMenu}>
+                            Profile
+                          </Link>
+                          <button className="btn custom-nav-btn w-100 d-flex align-items-center justify-content-start gap-2" style={{ backgroundColor: 'transparent', color: isDarkMode ? '#FFF' : '#111827', padding: '0.6rem 1rem', border: 'none', textAlign: 'left' }} onClick={() => { toggleTheme(); closeMobileMenu(); }}>
+                            {isDarkMode ? <><Sun size={18} /> Light Mode</> : <><Moon size={18} /> Dark Mode</>}
+                          </button>
+                          <hr className="my-1" />
+                          <button className="btn custom-nav-btn w-100 d-flex align-items-center justify-content-start gap-2 text-danger" style={{ backgroundColor: 'transparent', padding: '0.6rem 1rem', border: 'none', textAlign: 'left' }} onClick={() => { setShowLogoutModal(true); closeMobileMenu(); }}>
+                            Logout
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 ) : (
                   <>
                     <Link to="/login" className="btn custom-nav-btn custom-login-btn w-100 d-flex align-items-center justify-content-center" style={{ border: '1px solid #D1D5DB', padding: '0.6rem', borderRadius: '8px', fontSize: '15px', fontWeight: 500, boxSizing: 'border-box' }} onClick={closeMobileMenu}>
@@ -263,22 +317,47 @@ function Navbar() {
                     <Link to="/signup" className="btn custom-nav-btn w-100 d-flex align-items-center justify-content-center" style={{ backgroundColor: '#991B1B', color: 'white', padding: '0.6rem', borderRadius: '8px', fontSize: '15px', fontWeight: 500, border: '1px solid transparent', boxSizing: 'border-box' }} onClick={closeMobileMenu}>
                       Sign up
                     </Link>
+                    <button className="btn custom-nav-btn w-100 d-flex align-items-center justify-content-center gap-2" style={{ border: '1px solid #D1D5DB', backgroundColor: 'transparent', color: isDarkMode ? '#FFF' : '#111827', padding: '0.6rem', borderRadius: '8px', fontSize: '15px', fontWeight: 500, boxSizing: 'border-box' }} onClick={() => { toggleTheme(); closeMobileMenu(); }}>
+                      {isDarkMode ? <><Sun size={18} /> Light Mode</> : <><Moon size={18} /> Dark Mode</>}
+                    </button>
                   </>
                 )}
-                <button className="btn custom-nav-btn w-100 d-flex align-items-center justify-content-center gap-2" style={{ border: '1px solid #D1D5DB', backgroundColor: 'transparent', color: isDarkMode ? '#FFF' : '#111827', padding: '0.6rem', borderRadius: '8px', fontSize: '15px', fontWeight: 500, boxSizing: 'border-box' }} onClick={() => { toggleTheme(); closeMobileMenu(); }}>
-                  {isDarkMode ? <><Sun size={18} /> Light Mode</> : <><Moon size={18} /> Dark Mode</>}
-                </button>
-                <button className="btn custom-nav-btn w-100 d-flex align-items-center justify-content-center gap-2" style={{ border: '1px solid #D1D5DB', backgroundColor: 'transparent', color: isDarkMode ? '#FFF' : '#111827', padding: '0.6rem', borderRadius: '8px', fontSize: '15px', fontWeight: 500, boxSizing: 'border-box', position: 'relative' }} onClick={() => { closeMobileMenu(); navigate('/my-orders'); }}>
-                  <ClipboardList size={20} /> My Orders{activeOrders.length > 0 ? ` (${activeOrders.length})` : ''}
-                </button>
-                <button className="btn custom-nav-btn w-100 d-flex align-items-center justify-content-center gap-2" style={{ backgroundColor: '#F59E0B', color: 'white', padding: '0.6rem', borderRadius: '8px', fontSize: '15px', fontWeight: 500, border: '1px solid transparent', boxSizing: 'border-box' }} onClick={() => { closeMobileMenu(); navigate('/cart'); }}>
-                  <ShoppingCart size={20} /> Cart{cartCount > 0 ? ` (${cartCount})` : ''}
-                </button>
+                {isAuthenticated && (
+                  <>
+                    <button className="btn custom-nav-btn w-100 d-flex align-items-center justify-content-center gap-2" style={{ border: '1px solid #D1D5DB', backgroundColor: 'transparent', color: isDarkMode ? '#FFF' : '#111827', padding: '0.6rem', borderRadius: '8px', fontSize: '15px', fontWeight: 500, boxSizing: 'border-box', position: 'relative' }} onClick={() => { closeMobileMenu(); navigate('/my-orders'); }}>
+                      <ClipboardList size={20} /> My Orders{activeOrders.length > 0 ? ` (${activeOrders.length})` : ''}
+                    </button>
+                    <button className="btn custom-nav-btn w-100 d-flex align-items-center justify-content-center gap-2" style={{ backgroundColor: '#F59E0B', color: 'white', padding: '0.6rem', borderRadius: '8px', fontSize: '15px', fontWeight: 500, border: '1px solid transparent', boxSizing: 'border-box' }} onClick={() => { closeMobileMenu(); navigate('/cart'); }}>
+                      <ShoppingCart size={20} /> Cart{cartCount > 0 ? ` (${cartCount})` : ''}
+                    </button>
+                  </>
+                )}
               </div>
             </div>
           </div>
         </div>
       </header>
+
+      {/* Logout Confirmation Modal */}
+      {showLogoutModal && (
+        <div className="modal fade show" style={{ display: 'block', backgroundColor: 'rgba(0,0,0,0.5)' }} tabIndex="-1" role="dialog">
+          <div className="modal-dialog modal-dialog-centered" role="document">
+            <div className={`modal-content ${isDarkMode ? 'bg-dark text-white border-secondary' : ''}`} style={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)' }}>
+              <div className="modal-header border-bottom-0 pb-0">
+                <h5 className="modal-title fw-bold">Sign Out</h5>
+                <button type="button" className={`btn-close ${isDarkMode ? 'btn-close-white' : ''}`} onClick={() => setShowLogoutModal(false)} aria-label="Close"></button>
+              </div>
+              <div className="modal-body py-4">
+                <p className="mb-0 text-center" style={{ fontSize: '1.1rem' }}>Are you sure you want to log out from TMC Food Hub?</p>
+              </div>
+              <div className="modal-footer border-top-0 pt-0 d-flex justify-content-center gap-2">
+                <button type="button" className="btn btn-light px-4" onClick={() => setShowLogoutModal(false)} style={{ borderRadius: '8px', fontWeight: 500 }}>Cancel</button>
+                <button type="button" className="btn btn-danger px-4" onClick={() => { setShowLogoutModal(false); logout(); navigate('/'); }} style={{ backgroundColor: '#991B1B', border: 'none', borderRadius: '8px', fontWeight: 500 }}>Yes, Logout</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

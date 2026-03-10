@@ -4,6 +4,9 @@ import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider } from './components/ui/ThemeContext.jsx';
 import { CartProvider } from './components/ui/CartContext.jsx';
 import { AuthProvider } from './context/AuthContext.jsx';
+import { NotificationProvider } from './context/NotificationContext.jsx';
+import { OrderProvider } from './context/OrderContext.jsx';
+import { OwnerAuthProvider } from './context/OwnerAuthContext.jsx';
 import './assets/css/App.css';
 import './assets/css/about.css';
 import './assets/css/contact.css';
@@ -27,13 +30,19 @@ import App from './App.jsx'
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <ThemeProvider>
-      <AuthProvider>
-        <CartProvider>
-          <BrowserRouter>
-            <App />
-          </BrowserRouter>
-        </CartProvider>
-      </AuthProvider>
+      <BrowserRouter>
+        <NotificationProvider>
+          <AuthProvider>
+            <CartProvider>
+              <OrderProvider>
+                <OwnerAuthProvider>
+                  <App />
+                </OwnerAuthProvider>
+              </OrderProvider>
+            </CartProvider>
+          </AuthProvider>
+        </NotificationProvider>
+      </BrowserRouter>
     </ThemeProvider>
   </StrictMode>,
 )

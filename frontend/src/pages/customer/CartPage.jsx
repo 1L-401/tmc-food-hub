@@ -2,6 +2,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Minus, Plus, Trash2 } from 'lucide-react';
 import { CartContext } from '../../components/ui/CartContext';
+import { useAuth } from '../../context/AuthContext';
 import Navbar from '../../components/sections/Navbar';
 import Footer from '../../components/sections/Footer';
 import BackToTop from '../../components/ui/BackToTop';
@@ -9,13 +10,19 @@ import styles from './CartPage.module.css';
 
 function CartPage() {
     const { cartItems, cartCount, cartSubtotal, increment, decrement, removeFromCart } = useContext(CartContext);
+    const { isAuthenticated, loading } = useAuth();
     const navigate = useNavigate();
     const [promoCode, setPromoCode] = useState('');
     const [appliedPromo, setAppliedPromo] = useState(null);
 
     useEffect(() => {
         window.scrollTo(0, 0);
-    }, []);
+        if (!loading && !isAuthenticated) {
+            navigate('/login', { state: { from: '/cart' } });
+        }
+    }, [isAuthenticated, loading, navigate]);
+
+    if (loading || !isAuthenticated) return null;
 
     const deliveryFee = cartItems.length > 0 ? 3.00 : 0;
     const discount = appliedPromo ? 5.00 : 0;
