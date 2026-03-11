@@ -183,8 +183,7 @@ function RestaurantMenuPage() {
                                         <div className={styles.menuCard} key={item.id}>
                                             <div className={styles.menuCardImgWrap}>
                                                 <img src={item.image} alt={item.title} className={styles.menuCardImg} />
-                                                {/* Optional: Add best seller badge dynamically if needed */}
-                                                {item.id % 5 === 0 && <span className={styles.bestSellerBadge}>Best Seller</span>}
+                                                {item.isBestSeller && <span className={styles.bestSellerBadge}>Best Seller</span>}
                                             </div>
                                             <div className={styles.menuCardBody}>
                                                 <div className={styles.menuCardHeaderRow}>
@@ -194,7 +193,7 @@ function RestaurantMenuPage() {
                                                 <p className={styles.menuCardDesc}>{item.description}</p>
                                                 <div className={styles.menuCardFooterRow}>
                                                     <div className={styles.menuCardRating}>
-                                                        <Star size={14} fill="#F5A623" color="#F5A623" /> 4.8 <span>(152)</span>
+                                                        <Star size={14} fill="#F5A623" color="#F5A623" /> {item.rating || 4.8} <span>({item.reviews || 152})</span>
                                                     </div>
                                                     <button className={styles.addBtnIcon} onClick={() => handleAddToCart(item)}>
                                                         <ShoppingCart size={16} />
