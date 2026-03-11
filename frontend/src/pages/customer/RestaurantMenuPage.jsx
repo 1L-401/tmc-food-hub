@@ -182,7 +182,11 @@ function RestaurantMenuPage() {
                                     {filteredItems.map(item => (
                                         <div className={styles.menuCard} key={item.id}>
                                             <div className={styles.menuCardImgWrap}>
-                                                <img src={item.image} alt={item.title} className={styles.menuCardImg} />
+                                                <img
+                                                    src={item.image}
+                                                    alt={item.title}
+                                                    className={`${styles.menuCardImg} ${item.title === 'Jolly Spaghetti' ? styles.spaghettiImg : ''}`}
+                                                />
                                                 {item.isBestSeller && <span className={styles.bestSellerBadge}>Best Seller</span>}
                                             </div>
                                             <div className={styles.menuCardBody}>
