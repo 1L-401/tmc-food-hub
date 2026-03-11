@@ -76,6 +76,12 @@ function CartPage() {
                                                     <img src={item.image} alt={item.title} className={styles.itemImage} />
                                                     <div>
                                                         <h3 className={styles.itemName}>{item.title}</h3>
+                                                        {(item.variation || (item.addOns && item.addOns.length > 0)) && (
+                                                            <div style={{ fontSize: '0.8rem', color: '#6B7280', marginTop: '2px' }}>
+                                                                {item.variation && <span style={{ display: 'block' }}>{item.variation.name}</span>}
+                                                                {item.addOns && item.addOns.length > 0 && <span style={{ display: 'block' }}>+ {item.addOns.map(a => a.name).join(', ')}</span>}
+                                                            </div>
+                                                        )}
                                                         <span className={styles.itemPrice}>${item.price.toFixed(2)}</span>
                                                     </div>
                                                 </div>
@@ -110,6 +116,12 @@ function CartPage() {
                                                     <img src={item.image} alt={item.title} className={styles.summaryItemImg} />
                                                     <div>
                                                         <div className={styles.summaryItemName}>{item.title}</div>
+                                                        {(item.variation || (item.addOns && item.addOns.length > 0)) && (
+                                                            <div style={{ fontSize: '0.75rem', color: '#6B7280', margin: '2px 0' }}>
+                                                                {item.variation && <span>{item.variation.name}</span>}
+                                                                {item.addOns && item.addOns.length > 0 && <span> • {item.addOns.length} add-ons</span>}
+                                                            </div>
+                                                        )}
                                                         <div className={styles.summaryItemMeta}>x{item.quantity} • ${item.price.toFixed(2)}</div>
                                                     </div>
                                                 </div>
