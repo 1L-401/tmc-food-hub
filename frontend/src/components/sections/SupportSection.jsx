@@ -20,9 +20,9 @@ function SupportSection() {
   } = useSupportPageLogic();
 
   const quickLinks = [
-    { label: 'How to place an order', icon: 'bi-bag', to: '/faq#One' },
-    { label: 'Track my delivery', icon: 'bi-geo-alt', to: '/faq#Two' },
-    { label: 'Cancel or modify an order', icon: 'bi-x-circle', to: '/faq#Three' },
+    { label: 'How to place an order', icon: 'bi-bag', to: '/faq#place-order' },
+    { label: 'Track my delivery', icon: 'bi-geo-alt', to: '/faq#track-delivery' },
+    { label: 'Cancel or modify an order', icon: 'bi-x-circle', to: '/faq#cancel-modify-order' },
     { label: 'General FAQ', icon: 'bi-question-circle', to: '/faq' },
   ];
 

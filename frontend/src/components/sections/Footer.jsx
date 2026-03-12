@@ -123,7 +123,7 @@ function Footer() {
               </p>
               <p>
                 <span>Website</span>
-                <a href="https://tmcfoodhub.com">https://tmcfoodhub.com</a>
+                <a href="https://foodhub.tmc-innovations.com/">https://foodhub.tmc-innovations.com/</a>
               </p>
             </address>
           </div>
