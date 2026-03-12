@@ -1,4 +1,37 @@
 function FeaturesSection() {
+  const features = [
+    {
+      icon: "bi-basket",
+      title: "Wide Variety",
+      text: "Browse hundreds of restaurants, cuisines, and food categories all in one place.",
+      delay: 0
+    },
+    {
+      icon: "bi-truck",
+      title: "Fast & Reliable Delivery",
+      text: "Real-time tracking ensures your food arrives hot and on time.",
+      delay: 100
+    },
+    {
+      icon: "bi-tags",
+      title: "Exclusive Deals",
+      text: "Enjoy promos, discounts, and loyalty rewards available only on Foodhub.",
+      delay: 200
+    },
+    {
+      icon: "bi-phone",
+      title: "Easy Ordering",
+      text: "A clean, intuitive interface makes ordering effortless from any device.",
+      delay: 300
+    },
+    {
+      icon: "bi-shop",
+      title: "Support Local",
+      text: "We partner with local restaurants and home cooks to boost community food businesses.",
+      delay: 400
+    }
+  ];
+
   return (
     <section className="section features__v2 py-5" id="features">
       <div className="container">
@@ -56,39 +89,16 @@ function FeaturesSection() {
                 {/* Right Side */}
                 <div className="col-lg-7">
                   <div className="row g-4">
-                    {[
-                      {
-                        icon: "bi-basket",
-                        title: "Wide Variety",
-                        text: "Browse hundreds of restaurants, cuisines, and food categories all in one place.",
-                        delay: 0
-                      },
-                      {
-                        icon: "bi-truck",
-                        title: "Fast & Reliable Delivery",
-                        text: "Real-time tracking ensures your food arrives hot and on time.",
-                        delay: 100
-                      },
-                      {
-                        icon: "bi-tags",
-                        title: "Exclusive Deals",
-                        text: "Enjoy promos, discounts, and loyalty rewards available only on Foodhub.",
-                        delay: 200
-                      },
-                      {
-                        icon: "bi-phone",
-                        title: "Easy Ordering",
-                        text: "A clean, intuitive interface makes ordering effortless from any device.",
-                        delay: 300
-                      },
-                      {
-                        icon: "bi-shop",
-                        title: "Support Local",
-                        text: "We partner with local restaurants and home cooks to boost community food businesses.",
-                        delay: 400
-                      }
-                    ].map((feature, idx) => (
-                      <div key={idx} className="col-sm-6" data-aos="fade-up" data-aos-delay={feature.delay}>
+                    {features.map((feature, idx) => {
+                      const isLastOddItem = features.length % 2 === 1 && idx === features.length - 1;
+
+                      return (
+                      <div
+                        key={idx}
+                        className={`col-sm-6${isLastOddItem ? ' mx-sm-auto' : ''}`}
+                        data-aos="fade-up"
+                        data-aos-delay={feature.delay}
+                      >
                         <div className="p-4 rounded-4 h-100 bg-white" style={{ border: '1px solid #E5E7EB', boxShadow: '0 2px 4px -1px rgba(0,0,0,0.05)' }}>
                           <div
                             className="rounded-3 d-flex align-items-center justify-content-center mb-3"
@@ -100,7 +110,7 @@ function FeaturesSection() {
                           <p className="small mb-0 text-muted" style={{ lineHeight: '1.6' }}>{feature.text}</p>
                         </div>
                       </div>
-                    ))}
+                    )})}
                   </div>
                 </div>
 
