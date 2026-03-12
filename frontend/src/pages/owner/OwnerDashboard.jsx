@@ -74,11 +74,21 @@ const NAV_GROUPS = [
 ];
 
 function OwnerDashboard() {
-    const { currentOwner, ownerStore, logout, updateStore } = useOwnerAuth();
+    const { currentOwner, ownerStore, logout, updateStore, loading } = useOwnerAuth();
     const navigate = useNavigate();
     const [active, setActive] = useState('overview');
     const [profileOpen, setProfileOpen] = useState(false);
     const [payoutViewData, setPayoutViewData] = useState(null);
+
+    // Prevent redirect until authentication check is complete
+    if (loading) {
+        return (
+            <div className={styles.loadingScreen}>
+                <div className={styles.spinner}></div>
+                <p>Establishing secure connection...</p>
+            </div>
+        );
+    }
 
     if (!currentOwner) { navigate('/owner-login'); return null; }
     if (!ownerStore) return <p>Store not found.</p>;
