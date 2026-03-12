@@ -9,7 +9,7 @@ export function OrderProvider({ children }) {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const fetchOrders = useCallback(async (isInitial = false) => {
+    const fetchOrders = useCallback(async (isInitial = false, signal = null) => {
         const token = localStorage.getItem('auth_token');
         if (!token || token === 'undefined' || token === 'null') {
             setLoading(false);
@@ -18,10 +18,11 @@ export function OrderProvider({ children }) {
 
         try {
             if (isInitial) setLoading(true);
-            const response = await axios.get('/orders');
+            const response = await axios.get('/orders', { signal });
             const formattedOrders = response.data.map(o => {
                 // Map legacy/old statuses to new simplified flow
                 let currentStatus = o.status;
+                if (currentStatus === 'Order Placed') currentStatus = 'Pending';
                 if (currentStatus === 'Being Prepared') currentStatus = 'Order Confirmed';
                 if (currentStatus === 'Picked Up') currentStatus = 'Out for Delivery';
                 
@@ -29,7 +30,7 @@ export function OrderProvider({ children }) {
                 const updatedAt = new Date(o.updated_at);
                 
                 const statusList = [
-                    'Order Placed',
+                    'Pending',
                     'Order Confirmed',
                     'Out for Delivery',
                     'Delivered'
@@ -44,7 +45,6 @@ export function OrderProvider({ children }) {
                         if (index <= currentStatusIndex) state = 'completed';
                         else if (index === currentStatusIndex + 1) state = 'active';
                     } else {
-                        // All steps completed when Delivered
                         state = 'completed';
                     }
                     
@@ -54,7 +54,6 @@ export function OrderProvider({ children }) {
                             if (label === 'Delivered') return 'Enjoy your meal!';
                             return 'Done';
                         }
-                        // Active state descriptions (This is the NEXT step)
                         const activeDescs = {
                             'Order Confirmed': 'Waiting for restaurant confirmation',
                             'Out for Delivery': 'Kitchen is preparing your food',
@@ -63,7 +62,6 @@ export function OrderProvider({ children }) {
                         return activeDescs[label] || 'In progress';
                     };
 
-                    // Use updated_at for active/last step to show real-time progress
                     const stepTime = (state === 'active' || (state === 'completed' && index === currentStatusIndex)) ? updatedAt : createdAt;
 
                     return {
@@ -87,19 +85,19 @@ export function OrderProvider({ children }) {
 
                 return {
                     id: o.id,
-                    orderNumber: orderNumber, // New formatted ID
+                    orderNumber: orderNumber,
                     restaurant: o.store_name,
                     customer: o.customer ? `${o.customer.first_name} ${o.customer.last_name}` : `Customer ${o.customer_id}`,
                     customerName: o.customer ? `${o.customer.first_name} ${o.customer.last_name}` : `Customer ${o.customer_id}`,
                     customerPhone: o.customer?.phone || o.contact_number || 'N/A',
                     customerAddress: o.customer?.address || o.delivery_address || 'N/A',
-                    address: o.delivery_address, // Keep original for reference
-                    deliveryAddress: o.delivery_address, // Keep original for reference
+                    address: o.delivery_address,
+                    deliveryAddress: o.delivery_address,
                     items: o.items.map(i => ({ 
                         id: i.id,
                         name: i.item_name, 
                         quantity: i.quantity, 
-                        qty: i.quantity, // Alias for compatibility
+                        qty: i.quantity,
                         image: i.image, 
                         price: parseFloat(i.price), 
                         variations: i.variations 
@@ -109,7 +107,7 @@ export function OrderProvider({ children }) {
                     discount: parseFloat(o.discount),
                     total: parseFloat(o.total),
                     status: currentStatus,
-                    placedAt: o.created_at, // ISO string for MyOrdersPage
+                    placedAt: o.created_at,
                     time: createdAt.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
                     note: o.special_instructions || o.customer?.delivery_instructions || '',
                     paymentMethod: o.payment_method,
@@ -119,6 +117,10 @@ export function OrderProvider({ children }) {
             });
             setOrders(formattedOrders);
         } catch (error) {
+            if (axios.isCancel(error)) {
+                // Silently ignore cancellations
+                return;
+            }
             console.error('Failed to fetch orders', error);
         } finally {
             setLoading(false);
@@ -126,10 +128,24 @@ export function OrderProvider({ children }) {
     }, []);
 
     useEffect(() => {
-        fetchOrders(true);
-        // Polling for realtime updates every 5 seconds
-        const interval = setInterval(() => fetchOrders(false), 5000);
-        return () => clearInterval(interval);
+        const controller = new AbortController();
+        let timeoutId = null;
+
+        const poll = async (isInitial = false) => {
+            await fetchOrders(isInitial, controller.signal);
+            
+            // Re-schedule next poll ONLY IF not aborted
+            if (!controller.signal.aborted) {
+                timeoutId = setTimeout(() => poll(false), 5000);
+            }
+        };
+
+        poll(true);
+
+        return () => {
+            controller.abort();
+            if (timeoutId) clearTimeout(timeoutId);
+        };
     }, [fetchOrders]);
 
     const placeOrder = useCallback(async (orderData) => {

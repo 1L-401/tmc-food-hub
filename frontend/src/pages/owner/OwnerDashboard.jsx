@@ -78,6 +78,7 @@ function OwnerDashboard() {
     const navigate = useNavigate();
     const [active, setActive] = useState('overview');
     const [profileOpen, setProfileOpen] = useState(false);
+    const [sidebarOpen, setSidebarOpen] = useState(false);
     const [payoutViewData, setPayoutViewData] = useState(null);
 
     // Prevent redirect until authentication check is complete
@@ -127,8 +128,27 @@ function OwnerDashboard() {
 
     return (
         <div className={styles.shell}>
+            {/* Mobile Header (Hidden on Desktop) */}
+            <header className={styles.mobileHeader}>
+                <button className={styles.hamburgerBtn} onClick={() => setSidebarOpen(true)}>
+                    <Layers size={22} />
+                </button>
+                <img src={tmcLogo} alt="TMC Food Hub" className={styles.mobileLogo} />
+                <button className={styles.mobileNotificationBtn}>
+                    <Bell size={20} />
+                </button>
+            </header>
+
+            {/* Sidebar Overlay (Mobile only) */}
+            {sidebarOpen && <div className={styles.mobileOverlay} onClick={() => setSidebarOpen(false)}></div>}
+
             {/* ── Sidebar ── */}
-            <aside className={styles.sidebar}>
+            <aside className={`${styles.sidebar} ${sidebarOpen ? styles.sidebarOpen : ''}`}>
+                {/* Mobile Close Button */}
+                <button className={styles.closeSidebarBtn} onClick={() => setSidebarOpen(false)}>
+                    <X size={24} />
+                </button>
+
                 {/* TMC Food Hub branding */}
                 <div className={styles.sidebarTop}>
                     <Link to="/" className={styles.tmcLogoLink}>
@@ -148,7 +168,10 @@ function OwnerDashboard() {
                                     <div key={n.key} className={styles.navItemWrapper}>
                                         <button
                                             className={`${styles.navBtn} ${expanded ? styles.navBtnActive : ''}`}
-                                            onClick={() => setActive(n.key)}
+                                            onClick={() => {
+                                                setActive(n.key);
+                                                if (window.innerWidth < 1024) setSidebarOpen(false);
+                                            }}
                                         >
                                             <span className={styles.navIcon}>{n.icon}</span>
                                             <span>{n.label}</span>
@@ -165,6 +188,7 @@ function OwnerDashboard() {
                                                         onClick={(e) => {
                                                             e.stopPropagation();
                                                             setActive(s.key);
+                                                            if (window.innerWidth < 1024) setSidebarOpen(false);
                                                         }}
                                                     >
                                                         <span className={styles.navSubIcon}>{s.icon}</span>
