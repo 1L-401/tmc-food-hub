@@ -103,32 +103,26 @@ const ORDER_DATA = {
     statuses: [
         {
             label: 'Order Placed',
-            time: '12:30 PM',
+            time: '',
             description: 'Waiting for restaurant confirmation',
-            state: 'completed',
+            state: 'active',
         },
         {
             label: 'Order Confirmed',
-            time: '12:35 PM',
-            description: 'Restaurant is preparing your food',
-            state: 'completed',
+            time: '',
+            description: 'Kitchen is preparing your food',
+            state: 'pending',
         },
         {
-            label: 'Being Prepared',
-            time: '12:43 PM',
-            description: 'Your meal is being cooked',
-            state: 'completed',
-        },
-        {
-            label: 'Picked Up',
+            label: 'Out for Delivery',
             time: '',
             description: 'Your rider is on the way',
-            state: 'active',
+            state: 'pending',
         },
         {
             label: 'Delivered',
             time: '',
-            description: 'Pending',
+            description: 'Order will be delivered soon',
             state: 'pending',
         },
     ],
@@ -159,10 +153,13 @@ function OrderTrackingPage() {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
     const orderId = searchParams.get('id');
-    const { orders, cancelOrder } = useOrders();
+    const { orders, cancelOrder, loading } = useOrders();
 
-    // Find order from context or fall back to mock
-    const contextOrder = orders.find(o => o.id === orderId);
+    // Find order from context
+    const contextOrder = orders.find(o =>
+        String(o.id) === String(orderId) ||
+        String(o.orderNumber) === String(orderId)
+    );
 
     // Build display data merging context order with mock map coords
     const order = contextOrder ? {
@@ -185,7 +182,7 @@ function OrderTrackingPage() {
         statuses: contextOrder.timeline || ORDER_DATA.statuses,
         status: contextOrder.status,
         deliveryAddress: contextOrder.deliveryAddress,
-    } : ORDER_DATA;
+    } : null;
 
     const [cancelTimer, setCancelTimer] = useState(120);
     const timerRef = useRef(null);
@@ -237,6 +234,47 @@ function OrderTrackingPage() {
         );
     };
 
+    if (loading && !contextOrder) {
+        return (
+            <div className="site-wrap">
+                <Navbar />
+                <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '60vh' }}>
+                    <div className="text-center">
+                        <div className="spinner-border text-primary mb-3" role="status">
+                            <span className="visually-hidden">Loading...</span>
+                        </div>
+                        <p className="text-muted">Fetching your order status...</p>
+                    </div>
+                </div>
+                <Footer />
+            </div>
+        );
+    }
+
+    if (!loading && !order) {
+        return (
+            <div className="site-wrap">
+                <Navbar />
+                <div className="container py-5 text-center" style={{ minHeight: '60vh', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                    <div className="mb-4">
+                        <Package size={64} className="text-muted opacity-25" />
+                    </div>
+                    <h2 className="fw-bold mb-3">Order Not Found</h2>
+                    <p className="text-muted mb-4">We couldn't find the order with ID: <span className="fw-bold text-dark">{orderId}</span></p>
+                    <div className="d-flex gap-3 justify-content-center">
+                        <button className="btn btn-primary px-4 py-2" style={{ backgroundColor: '#B91C1C', border: 'none' }} onClick={() => navigate('/my-orders')}>
+                            View My Orders
+                        </button>
+                        <button className="btn btn-outline-secondary px-4 py-2" onClick={() => navigate('/')}>
+                            Back to Home
+                        </button>
+                    </div>
+                </div>
+                <Footer />
+            </div>
+        );
+    }
+
     return (
         <>
             <div className="site-wrap">
@@ -269,10 +307,10 @@ function OrderTrackingPage() {
                                         <div className={styles.arrivalDot}></div>
                                         <div>
                                             <span className={styles.arrivalTitle}>
-                                                Arriving in {order.estimatedArrival} mins
+                                                {order.status === 'Delivered' ? 'Order Delivered' : `Arriving in ${order.estimatedArrival} mins`}
                                             </span>
                                             <span className={styles.arrivalSub}>
-                                                Order #{order.orderNumber || order.id} • On the way
+                                                Order #{order.orderNumber || order.id} • {order.status}
                                             </span>
                                         </div>
                                     </div>

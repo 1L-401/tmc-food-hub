@@ -9,31 +9,52 @@ export function OrderProvider({ children }) {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const fetchOrders = useCallback(async () => {
+    const fetchOrders = useCallback(async (isInitial = false) => {
         try {
-            setLoading(true);
+            if (isInitial) setLoading(true);
             const response = await axios.get('/orders');
-            // Assuming response.data is the array of orders
             const formattedOrders = response.data.map(o => {
+                // Map legacy/old statuses to new simplified flow
+                let currentStatus = o.status;
+                if (currentStatus === 'Being Prepared') currentStatus = 'Order Confirmed';
+                if (currentStatus === 'Picked Up') currentStatus = 'Out for Delivery';
+                
                 const createdAt = new Date(o.created_at);
+                const updatedAt = new Date(o.updated_at);
+                
                 const statusList = [
                     'Order Placed',
                     'Order Confirmed',
-                    'Being Prepared',
-                    'Picked Up',
+                    'Out for Delivery',
                     'Delivered'
                 ];
                 
-                const currentStatusIndex = statusList.indexOf(o.status);
+                const currentStatusIndex = statusList.indexOf(currentStatus);
                 const timeline = statusList.map((label, index) => {
                     let state = 'pending';
                     if (index < currentStatusIndex) state = 'completed';
                     else if (index === currentStatusIndex) state = 'active';
                     
+                    const getStatusDesc = (label, state) => {
+                        if (state === 'pending') return 'Pending';
+                        if (state === 'completed') return 'Done';
+                        // Active state descriptions
+                        const descs = {
+                            'Order Placed': 'Waiting for restaurant confirmation',
+                            'Order Confirmed': 'Kitchen is preparing your food',
+                            'Out for Delivery': 'Your rider is on the way',
+                            'Delivered': 'Enjoy your meal!'
+                        };
+                        return descs[label] || 'Current step';
+                    };
+
+                    // Use updated_at for active/last step to show real-time progress
+                    const stepTime = (index === currentStatusIndex) ? updatedAt : createdAt;
+
                     return {
                         label,
-                        time: index <= currentStatusIndex ? createdAt.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '',
-                        description: state === 'completed' ? 'Done' : state === 'active' ? 'Current step' : 'Pending',
+                        time: index <= currentStatusIndex ? stepTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '',
+                        description: getStatusDesc(label, state),
                         state
                     };
                 });
@@ -72,7 +93,7 @@ export function OrderProvider({ children }) {
                     deliveryFee: parseFloat(o.delivery_fee),
                     discount: parseFloat(o.discount),
                     total: parseFloat(o.total),
-                    status: o.status,
+                    status: currentStatus,
                     placedAt: o.created_at, // ISO string for MyOrdersPage
                     time: createdAt.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
                     note: o.special_instructions || o.customer?.delivery_instructions || '',
@@ -90,7 +111,10 @@ export function OrderProvider({ children }) {
     }, []);
 
     useEffect(() => {
-        fetchOrders();
+        fetchOrders(true);
+        // Polling for realtime updates every 5 seconds
+        const interval = setInterval(() => fetchOrders(false), 5000);
+        return () => clearInterval(interval);
     }, [fetchOrders]);
 
     const placeOrder = useCallback(async (orderData) => {

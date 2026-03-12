@@ -21,8 +21,7 @@ export default function OrdersSection({ store }) {
         { key: 'All', label: 'All' },
         { key: 'Order Placed', label: 'New' },
         { key: 'Order Confirmed', label: 'Confirmed' },
-        { key: 'Being Prepared', label: 'Preparing' },
-        { key: 'Picked Up', label: 'Ready' },
+        { key: 'Out for Delivery', label: 'Out for Delivery' },
         { key: 'Delivered', label: 'Complete' }
     ];
 
@@ -249,7 +248,7 @@ export default function OrdersSection({ store }) {
                                 </div>
                                 <div className={styles.breakdownTotalRow}>
                                     <span>Total Amount</span>
-                                    <span className={styles.breakdownTotalValue}>${(selectedOrder.total - 2).toFixed(2)} <span className={styles.currency}>USD</span></span>
+                                    <span className={styles.breakdownTotalValue}>${(selectedOrder.total).toFixed(2)} <span className={styles.currency}>USD</span></span>
                                 </div>
                             </div>
                         </div>
