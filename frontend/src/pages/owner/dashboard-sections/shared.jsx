@@ -21,11 +21,11 @@ export function buildOrders(store) {
     ];
 }
 
-export const STATUS_ORDER = ['Order Placed', 'Order Confirmed', 'Out for Delivery', 'Delivered'];
+export const STATUS_ORDER = ['Pending', 'Order Confirmed', 'Out for Delivery', 'Delivered'];
 
 export function statusMeta(s) {
     const map = {
-        'Order Placed': { 
+        'Pending': { 
             color: '#D97706', 
             bg: '#FEF3C7', 
             icon: <Bell size={13} />, 
