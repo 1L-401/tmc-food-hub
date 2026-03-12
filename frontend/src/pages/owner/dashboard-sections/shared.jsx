@@ -21,8 +21,38 @@ export function buildOrders(store) {
     ];
 }
 
-export const STATUS_ORDER = ['Pending', 'Preparing', 'Delivering', 'Delivered'];
+export const STATUS_ORDER = ['Order Placed', 'Order Confirmed', 'Out for Delivery', 'Delivered'];
 
 export function statusMeta(s) {
-    return { Pending: { color: '#D97706', bg: '#FEF3C7', icon: <Bell size={13} />, next: 'Preparing', nextLabel: 'Accept & Prepare' }, Preparing: { color: '#2563EB', bg: '#DBEAFE', icon: <Timer size={13} />, next: 'Delivering', nextLabel: 'Out for Delivery' }, Delivering: { color: '#7C3AED', bg: '#EDE9FE', icon: <Truck size={13} />, next: 'Delivered', nextLabel: 'Mark Delivered' }, Delivered: { color: '#059669', bg: '#D1FAE5', icon: <CheckCircle2 size={13} />, next: null, nextLabel: null } }[s] || {};
+    const map = {
+        'Order Placed': { 
+            color: '#D97706', 
+            bg: '#FEF3C7', 
+            icon: <Bell size={13} />, 
+            next: 'Order Confirmed', 
+            nextLabel: 'Accept' 
+        }, 
+        'Order Confirmed': { 
+            color: '#2563EB', 
+            bg: '#DBEAFE', 
+            icon: <Timer size={13} />, 
+            next: 'Out for Delivery', 
+            nextLabel: 'Mark Out for Delivery' 
+        }, 
+        'Out for Delivery': { 
+            color: '#0891B2', 
+            bg: '#CFFAFE', 
+            icon: <Truck size={13} />, 
+            next: 'Delivered', 
+            nextLabel: 'Mark Delivered' 
+        }, 
+        'Delivered': { 
+            color: '#059669', 
+            bg: '#D1FAE5', 
+            icon: <CheckCircle2 size={13} />, 
+            next: null, 
+            nextLabel: null 
+        } 
+    };
+    return map[s] || {};
 }

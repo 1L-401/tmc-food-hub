@@ -21,6 +21,7 @@ function CheckoutPage() {
     const navigate = useNavigate();
 
     const [contactNumber, setContactNumber] = useState('');
+    const [deliveryAddress, setDeliveryAddress] = useState('');
     const [deliveryType, setDeliveryType] = useState('asap');
     const [specialInstructions, setSpecialInstructions] = useState('');
     const [paymentMethod, setPaymentMethod] = useState('gcash');
@@ -34,39 +35,57 @@ function CheckoutPage() {
         if (cartItems.length === 0 && !showSuccessModal) {
             navigate('/cart');
         }
-        if (!loading && !isAuthenticated) {
-            navigate('/login', { state: { from: '/checkout' } });
+        if (!loading) {
+            if (!isAuthenticated) {
+                navigate('/login', { state: { from: '/checkout' } });
+            } else if (user) {
+                setContactNumber(user.phone || '');
+                setDeliveryAddress(user.address || '');
+                if (user.delivery_instructions) {
+                    setSpecialInstructions(user.delivery_instructions);
+                }
+            }
         }
-    }, [cartItems.length, isAuthenticated, loading, navigate, showSuccessModal]);
+    }, [cartItems.length, isAuthenticated, loading, navigate, showSuccessModal, user]);
 
     const deliveryFee = 3.00;
     const discount = 5.00;
     const totalAmount = cartSubtotal + deliveryFee - discount;
 
-    const handlePlaceOrder = () => {
+    const handlePlaceOrder = async () => {
         if (!contactNumber.trim()) {
             setError('Contact number is required.');
             return;
         }
 
-        const storeName = cartItems[0]?.storeName || 'Restaurant';
-        const order = placeOrder({
-            items: cartItems.map(i => ({ id: i.id, name: i.title, quantity: i.quantity, price: i.price, image: i.image })),
-            restaurant: storeName,
-            subtotal: cartSubtotal,
-            deliveryFee,
-            discount,
-            total: totalAmount,
-            paymentMethod,
-            deliveryAddress: '123 Quezon Avenue, Unit 4B, Brgy. South Triangle, Quezon City, Metro Manila',
-            contactNumber,
-            specialInstructions,
-        });
+        try {
+            const storeName = cartItems[0]?.storeName || 'Restaurant';
+            const order = await placeOrder({
+                items: cartItems.map(i => ({ 
+                    name: i.title, 
+                    quantity: i.quantity, 
+                    price: i.price, 
+                    image: i.image,
+                    variations: i.variation ? { name: i.variation.name, addOns: i.addOns || [] } : null
+                })),
+                restaurant: storeName,
+                subtotal: cartSubtotal,
+                deliveryFee,
+                discount,
+                total: totalAmount,
+                paymentMethod,
+                deliveryAddress,
+                contactNumber,
+                specialInstructions,
+            });
 
-        setPlacedOrderId(order.id);
-        clearCart();
-        showNotification('Order placed successfully!', 'success');
-        setShowSuccessModal(true);
+            setPlacedOrderId(order.id);
+            clearCart();
+            showNotification('Order placed successfully!', 'success');
+            setShowSuccessModal(true);
+        } catch (error) {
+            showNotification('Failed to place order. Please try again.', 'error');
+        }
     };
 
     if (loading || !isAuthenticated || (cartItems.length === 0 && !showSuccessModal)) return null;
@@ -108,10 +127,9 @@ function CheckoutPage() {
                                                 <MapPin size={20} />
                                             </div>
                                             <div>
-                                                <div className={styles.addressLabel}>Home Address</div>
+                                                <div className={styles.addressLabel}>Delivery Address</div>
                                                 <div className={styles.addressText}>
-                                                    123 Quezon Avenue, Unit 4B, Brgy. South Triangle,
-                                                    Quezon City, Metro Manila
+                                                    {deliveryAddress || 'No address set. Please update your profile.'}
                                                 </div>
                                             </div>
                                         </div>
