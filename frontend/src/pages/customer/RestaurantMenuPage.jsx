@@ -8,6 +8,7 @@ import { CartContext } from '../../components/ui/CartContext';
 import AddToCartModal from '../../components/ui/AddToCartModal';
 import { getStores } from '../../data/storesData';
 import styles from './RestaurantMenuPage.module.css';
+import api from '../../api/axios';
 
 function StarRow({ rating, size = 14 }) {
     return (
@@ -29,6 +30,8 @@ function RestaurantMenuPage() {
 
     const [store, setStore] = useState(null);
     const [allStores, setAllStores] = useState([]);
+    const [menuItems, setMenuItems] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('Popular');
     const [activeCategory, setActiveCategory] = useState('All');
     const [activeDietary, setActiveDietary] = useState('All');
@@ -42,29 +45,62 @@ function RestaurantMenuPage() {
 
     useEffect(() => {
         window.scrollTo(0, 0);
-        const stores = getStores();
-        setAllStores(stores);
+        fetchMenu();
+    }, [storeId]);
 
-        const foundStore = stores.find(s => s.id === parseInt(storeId));
-        if (foundStore) {
-            setStore(foundStore);
-        } else {
-            // Handle store not found
+    const fetchMenu = async () => {
+        try {
+            const [menuRes, storesRes] = await Promise.all([
+                api.get(`/restaurants/${storeId}/menu`),
+                getStores() // Still using local for other stores for now
+            ]);
+
+            const storeData = menuRes.data.restaurant;
+            const groupedMenu = menuRes.data.menu;
+            
+            // Flatten menu items and add category field for matching
+            const flattened = [];
+            Object.keys(groupedMenu).forEach(catName => {
+                groupedMenu[catName].forEach(item => {
+                    flattened.push({ ...item, categoryName: catName });
+                });
+            });
+
+            // Map backend store data to frontend structure if needed
+            const formattedStore = {
+                ...storeData,
+                cuisine: 'Fast Food', // Placeholder or add to DB
+                deliveryTime: '20-30 min',
+                logo: storeData.restaurant_name === 'Jollibee' ? '/assets/images/service/jollibee/Jollibee_Logo.svg' : '/assets/images/service/placeholder.svg',
+                status: 'Operational',
+                rating: 4.8,
+                reviews: [], // Placeholder
+                menuItems: flattened
+            };
+
+            setStore(formattedStore);
+            setMenuItems(flattened);
+            setAllStores(storesRes);
+        } catch (error) {
+            console.error('Failed to fetch menu:', error);
             navigate('/menu');
+        } finally {
+            setLoading(false);
         }
-    }, [storeId, navigate]);
+    };
 
-    if (!store) return null; // Or a loading spinner
+    if (loading) return <div className={styles.loadingWrapper}>Loading Restaurant...</div>;
+    if (!store) return null;
 
     // Extract categories
-    const allCategories = ['All', ...new Set(store.menuItems.map(i => i.category))];
+    const allCategories = ['All', ...new Set(menuItems.map(i => i.categoryName))];
     const tabs = ['Popular', 'Group Meals', 'Drinks', 'Desserts'];
 
     // Filter menu items
-    const filteredItems = store.menuItems.filter(item => {
-        const matchCat = activeCategory === 'All' || item.category === activeCategory;
+    const filteredItems = menuItems.filter(item => {
+        const matchCat = activeCategory === 'All' || item.categoryName === activeCategory;
         const matchSearch = item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            item.description.toLowerCase().includes(searchQuery.toLowerCase());
+            (item.description && item.description.toLowerCase().includes(searchQuery.toLowerCase()));
         return matchCat && matchSearch;
     });
 
@@ -97,15 +133,15 @@ function RestaurantMenuPage() {
                         <div className={styles.breadcrumbs}>
                             <Link to="/">Home</Link> <span className="mx-2">/</span>
                             <Link to="/menu">Restaurants</Link> <span className="mx-2">/</span>
-                            <span className={styles.current}>{store.name}</span>
+                            <span className={styles.current}>{store.restaurant_name}</span>
                         </div>
 
                         {/* Restaurant Header */}
                         <div className={styles.restaurantHeader}>
-                            <img src={store.logo} alt={store.name} className={styles.restaurantLogo} />
+                            <img src={store.logo} alt={store.restaurant_name} className={styles.restaurantLogo} />
                             <div className={styles.restaurantInfo}>
                                 <div className={styles.restaurantCategory}>{store.cuisine}</div>
-                                <h1 className={styles.restaurantName}>{store.name}</h1>
+                                <h1 className={styles.restaurantName}>{store.restaurant_name}</h1>
                                 <div className={styles.restaurantMeta}>
                                     <span className={store.status === 'Operational' ? styles.statusBadgeOpen : styles.statusBadgeClosed}>
                                         ● {store.status}
@@ -191,33 +227,46 @@ function RestaurantMenuPage() {
                             {/* Menu Items Grid */}
                             <div className="col-lg-9">
                                 <div className={styles.menuGrid}>
-                                    {filteredItems.map(item => (
-                                        <div className={styles.menuCard} key={item.id}>
-                                            <div className={styles.menuCardImgWrap}>
-                                                <img
-                                                    src={item.image}
-                                                    alt={item.title}
-                                                    className={`${styles.menuCardImg} ${item.title === 'Jolly Spaghetti' ? styles.spaghettiImg : ''}`}
-                                                />
-                                                {item.isBestSeller && <span className={styles.bestSellerBadge}>Best Seller</span>}
-                                            </div>
-                                            <div className={styles.menuCardBody}>
-                                                <div className={styles.menuCardHeaderRow}>
-                                                    <h3 className={styles.menuCardTitle}>{item.title}</h3>
-                                                    <span className={styles.menuCardPrice}>${item.price.toFixed(2)}</span>
+                                    {filteredItems.map(item => {
+                                        const isAvailable = !!item.available && (item.stock_level > 0 || !item.auto_toggle);
+                                        
+                                        return (
+                                            <div 
+                                                className={`${styles.menuCard} ${!isAvailable ? styles.outOfStockCard : ''}`} 
+                                                key={item.id}
+                                            >
+                                                <div className={styles.menuCardImgWrap}>
+                                                    <img
+                                                        src={item.image}
+                                                        alt={item.title}
+                                                        className={`${styles.menuCardImg} ${item.title === 'Jolly Spaghetti' ? styles.spaghettiImg : ''}`}
+                                                    />
+                                                    {item.isBestSeller && <span className={styles.bestSellerBadge}>Best Seller</span>}
+                                                    {!isAvailable && <span className={styles.outOfStockBadge}>Out of Stock</span>}
                                                 </div>
-                                                <p className={styles.menuCardDesc}>{item.description}</p>
-                                                <div className={styles.menuCardFooterRow}>
-                                                    <div className={styles.menuCardRating}>
-                                                        <Star size={14} fill="#F5A623" color="#F5A623" /> {item.rating || 4.8} <span>({item.reviews || 152})</span>
+                                                <div className={styles.menuCardBody}>
+                                                    <div className={styles.menuCardHeaderRow}>
+                                                        <h3 className={styles.menuCardTitle}>{item.title}</h3>
+                                                        <span className={styles.menuCardPrice}>${parseFloat(item.price).toFixed(2)}</span>
                                                     </div>
-                                                    <button className={styles.addBtnIcon} onClick={() => handleAddToCartClick(item)}>
-                                                        <Plus size={16} />
-                                                    </button>
+                                                    <p className={styles.menuCardDesc}>{item.description}</p>
+                                                    <div className={styles.menuCardFooterRow}>
+                                                        <div className={styles.menuCardRating}>
+                                                            <Star size={14} fill="#F5A623" color="#F5A623" /> {item.rating || 4.8} <span>({item.reviews || 152})</span>
+                                                        </div>
+                                                        <button 
+                                                            className={styles.addBtnIcon} 
+                                                            onClick={() => isAvailable && handleAddToCartClick(item)}
+                                                            disabled={!isAvailable}
+                                                            style={!isAvailable ? { opacity: 0.5, cursor: 'not-allowed', background: '#9ca3af' } : {}}
+                                                        >
+                                                            <Plus size={16} />
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    ))}
+                                        );
+                                    })}
                                 </div>
 
                                 <div className={styles.pagination}>

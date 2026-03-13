@@ -3,6 +3,8 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OwnerAuthController;
+use App\Http\Controllers\InventoryController;
+use App\Http\Controllers\MenuController;
 use Illuminate\Support\Facades\Route;
 
 // Public Auth Routes
@@ -31,4 +33,18 @@ Route::middleware('auth:sanctum')->prefix('owner')->group(function () {
     Route::get('/user', [OwnerAuthController::class, 'user']);
     Route::put('/user', [OwnerAuthController::class, 'updateProfile']);
     Route::post('/logout', [OwnerAuthController::class, 'logout']);
+
+    // Inventory Management
+    Route::get('/inventory/categories', [InventoryController::class, 'getCategories']);
+    Route::post('/inventory/categories', [InventoryController::class, 'storeCategory']);
+    Route::delete('/inventory/categories/{id}', [InventoryController::class, 'destroyCategory']);
+
+    Route::get('/inventory/items', [InventoryController::class, 'getMenuItems']);
+    Route::post('/inventory/items', [InventoryController::class, 'storeMenuItem']);
+    Route::put('/inventory/items/{id}', [InventoryController::class, 'updateMenuItem']);
+    Route::patch('/inventory/items/{id}/stock', [InventoryController::class, 'updateStock']);
+    Route::patch('/inventory/items/{id}/availability', [InventoryController::class, 'toggleAvailability']);
 });
+
+// Public Menu Route
+Route::get('/restaurants/{id}/menu', [MenuController::class, 'show']);
