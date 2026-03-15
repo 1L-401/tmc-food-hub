@@ -70,7 +70,9 @@ function MenuPage() {
     }).sort((a, b) => {
         if (sortBy === 'Top Rated') return b.rating - a.rating;
         // Mock distance/time sort logic
-        if (sortBy === 'Fastest Delivery') return parseInt(a.deliveryTime) - parseInt(b.deliveryTime);
+        if (sortBy === 'Fastest Delivery' || sortBy === 'Distance') {
+            return parseInt(a.deliveryTime) - parseInt(b.deliveryTime);
+        }
         return 0; // standard order
     });
 
