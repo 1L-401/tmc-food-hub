@@ -140,9 +140,10 @@ function StoreModal({ store, onClose }) {
         : store.rating;
 
     const handleAddToCart = (item) => {
-        addToCart({ ...item, storeName: store.name });
+        addToCart({ ...item, storeName: store.name, restaurantId: store.id });
         setSelectedItem(null);
     };
+
 
     return (
         <div className={styles.backdrop} onClick={onClose}>

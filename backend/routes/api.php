@@ -7,32 +7,41 @@ use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\MenuController;
 use Illuminate\Support\Facades\Route;
 
-// Public Auth Routes
+// ── Public Auth Routes ────────────────────────────────────────────────────
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/send-otp', [AuthController::class, 'sendOtp'])->middleware('throttle:5,1');
 Route::post('/verify-otp', [AuthController::class, 'verifyOtp'])->middleware('throttle:10,1');
 
-// Owner Auth Routes
+// ── Owner Auth Routes ─────────────────────────────────────────────────────
 Route::post('/owner/login', [OwnerAuthController::class, 'login']);
 Route::post('/owner/register', [OwnerAuthController::class, 'register']);
 
-// Shared Authenticated Routes (mostly Customer)
+// ── Public Menu / Restaurant Browse Routes (customer-facing) ─────────────
+Route::get('/restaurants', [MenuController::class, 'index']);
+Route::get('/restaurants/{id}/menu', [MenuController::class, 'show']);
+
+// ── Customer Authenticated Routes ─────────────────────────────────────────
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [AuthController::class, 'user']);
     Route::put('/user', [AuthController::class, 'updateProfile']);
     Route::post('/logout', [AuthController::class, 'logout']);
-    
+
+    // Orders — customer places orders; controller checks role/model type internally
     Route::get('/orders', [OrderController::class, 'index']);
     Route::post('/orders', [OrderController::class, 'store']);
     Route::put('/orders/{id}/status', [OrderController::class, 'updateStatus']);
 });
 
-// Dedicated Owner Routes
+// ── Owner Authenticated Routes ────────────────────────────────────────────
 Route::middleware('auth:sanctum')->prefix('owner')->group(function () {
     Route::get('/user', [OwnerAuthController::class, 'user']);
     Route::put('/user', [OwnerAuthController::class, 'updateProfile']);
     Route::post('/logout', [OwnerAuthController::class, 'logout']);
+
+    // Owner also uses the shared /orders endpoint — OrderController detects RestaurantOwner model
+    Route::get('/orders', [OrderController::class, 'index']);
+    Route::put('/orders/{id}/status', [OrderController::class, 'updateStatus']);
 
     // Inventory Management
     Route::get('/inventory/categories', [InventoryController::class, 'getCategories']);
@@ -46,5 +55,3 @@ Route::middleware('auth:sanctum')->prefix('owner')->group(function () {
     Route::patch('/inventory/items/{id}/availability', [InventoryController::class, 'toggleAvailability']);
 });
 
-// Public Menu Route
-Route::get('/restaurants/{id}/menu', [MenuController::class, 'show']);

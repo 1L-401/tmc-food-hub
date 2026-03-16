@@ -53,4 +53,15 @@ class RestaurantOwner extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function menuItems()
+    {
+        return $this->hasMany(MenuItem::class, 'restaurant_owner_id');
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'restaurant_owner_id');
+    }
 }
+

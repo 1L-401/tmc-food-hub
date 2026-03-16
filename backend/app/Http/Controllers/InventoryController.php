@@ -35,9 +35,10 @@ class InventoryController extends Controller
     {
         $owner = Auth::user();
         $category = Category::where('restaurant_owner_id', $owner->id)->findOrFail($id);
-        $category.delete();
+        $category->delete();
         return response()->json(['message' => 'Category deleted']);
     }
+
 
     public function getMenuItems()
     {

@@ -92,6 +92,7 @@ export function CartProvider({ children }) {
         price: item.price,
         originalPrice: item.originalPrice,
         storeName: item.storeName,
+        restaurantId: item.restaurantId,  // FK to restaurant_owners.id
         variation: item.variation,
         addOns: item.addOns,
         quantity: item.quantity
@@ -116,7 +117,7 @@ export function CartProvider({ children }) {
     dispatch({ type: 'CLEAR_CART' });
   }, []);
 
-  const reorder = useCallback((items, restaurantName) => {
+  const reorder = useCallback((items, restaurantName, restaurantId = null) => {
     clearCart();
     items.forEach(item => {
       dispatch({
@@ -128,6 +129,7 @@ export function CartProvider({ children }) {
           price: item.price,
           originalPrice: item.originalPrice || item.price,
           storeName: restaurantName,
+          restaurantId: restaurantId,  // FK to restaurant_owners.id
           variation: item.variation || null,
           addOns: item.addOns || [],
           quantity: item.quantity || 1
