@@ -81,6 +81,13 @@ function CheckoutPage() {
 
         try {
             const storeName = cartItems[0]?.storeName || 'Restaurant';
+            const restaurantId = cartItems[0]?.restaurantId;
+
+            if (!restaurantId) {
+                showNotification('Unable to identify the restaurant. Please clear your cart and try again.', 'error');
+                return;
+            }
+
             const order = await placeOrder({
                 items: cartItems.map(i => ({ 
                     name: i.title, 
@@ -90,6 +97,7 @@ function CheckoutPage() {
                     variations: i.variation ? { name: i.variation.name, addOns: i.addOns || [] } : null
                 })),
                 restaurant: storeName,
+                restaurantId,
                 subtotal: cartSubtotal,
                 deliveryFee,
                 discount,
