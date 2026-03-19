@@ -22,7 +22,7 @@ export default function InventorySection({ onUpdate }) {
     const [refillItem, setRefillItem] = useState(null);
 
     // Modal Edit Form State
-    const [editForm, setEditForm] = useState({ stockLevel: 0, minThreshold: 10, unit: 'Units', autoToggle: true });
+    const [editForm, setEditForm] = useState({ stockLevel: 0, minThreshold: 10, unit: 'Units', autoToggle: true, image: null, image_file: null, category_id: null });
 
     // Modal Refill Form State
     const [addQty, setAddQty] = useState(0);
@@ -62,22 +62,32 @@ export default function InventorySection({ onUpdate }) {
             stockLevel: item.stock_level !== undefined ? item.stock_level : 0,
             minThreshold: item.min_threshold !== undefined ? item.min_threshold : 10,
             unit: item.unit || 'units',
-            autoToggle: item.auto_toggle !== undefined ? !!item.auto_toggle : true
+            autoToggle: item.auto_toggle !== undefined ? !!item.auto_toggle : true,
+            image: item.image || null,
+            image_file: null,
+            category_id: item.category_id || null
         });
     };
 
     const saveEdit = async () => {
         try {
-            const payload = {
-                title: editItem.title,
-                price: editItem.price,
-                stock_level: parseInt(editForm.stockLevel, 10) || 0,
-                min_threshold: parseInt(editForm.minThreshold, 10) || 10,
-                unit: editForm.unit,
-                auto_toggle: editForm.autoToggle
-            };
+            const formData = new FormData();
+            formData.append('title', editItem.title);
+            formData.append('price', editItem.price);
+            formData.append('category_id', editForm.category_id);
+            formData.append('stock_level', parseInt(editForm.stockLevel, 10) || 0);
+            formData.append('min_threshold', parseInt(editForm.minThreshold, 10) || 10);
+            formData.append('unit', editForm.unit);
+            formData.append('auto_toggle', editForm.autoToggle ? 1 : 0);
+            formData.append('_method', 'PUT');
 
-            const res = await api.put(`/owner/inventory/items/${editItem.id}`, payload);
+            if (editForm.image_file) {
+                formData.append('image_file', editForm.image_file);
+            }
+
+            const res = await api.post(`/owner/inventory/items/${editItem.id}`, formData, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            });
             
             setItems(items.map(i => i.id === editItem.id ? res.data : i));
             setEditItem(null);
@@ -310,6 +320,30 @@ export default function InventorySection({ onUpdate }) {
                             <button className={styles.iconBtn} onClick={() => setEditItem(null)} style={{ background: 'transparent' }}><X size={20} color="#6B7280" /></button>
                         </div>
                         <div className={styles.invModalBody}>
+                            <div className={styles.formGroup}>
+                                <label className={styles.invLabel}>Item Image</label>
+                                <div className={styles.menuPhotoUpload} onClick={() => document.getElementById('itemPhotoEdit').click()}>
+                                    {editForm.image_file ? (
+                                        <img src={URL.createObjectURL(editForm.image_file)} alt="Upload" />
+                                    ) : editForm.image ? (
+                                        <img src={editForm.image} alt="Current" />
+                                    ) : (
+                                        <><Package size={24} /><div className={styles.menuPhotoText}>Change Photo</div></>
+                                    )}
+                                    <input 
+                                        id="itemPhotoEdit" 
+                                        type="file" 
+                                        hidden 
+                                        accept="image/*" 
+                                        onChange={e => {
+                                            const file = e.target.files[0];
+                                            if (file) {
+                                                setEditForm({ ...editForm, image_file: file });
+                                            }
+                                        }}
+                                    />
+                                </div>
+                            </div>
                             <div className={styles.formGroup}>
                                 <label className={styles.invLabel}>Current Stock Level</label>
                                 <div className={styles.invInputRightIcon}>
