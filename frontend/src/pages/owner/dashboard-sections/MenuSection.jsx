@@ -100,12 +100,16 @@ export default function MenuSection({ store, onUpdate }) {
     }
 
     async function handleDelete(id) {
-        if (!window.confirm('Delete this item?')) return;
-        // Backend doesn't have a direct delete for menu items in InventoryController?
-        // Wait, I should check api.php again. It doesn't.
-        // But for now let's just use local state update or add a route later.
-        // Actually, let's skip delete implementation if route is missing to avoid errors.
-        alert('Delete functionality is currently being implemented on the server.');
+        if (!window.confirm('Are you sure you want to delete this item?')) return;
+        
+        try {
+            await api.delete(`/owner/inventory/items/${id}`);
+            setItems(prev => prev.filter(i => i.id !== id));
+            setDialog({ type: 'success', title: 'Item Deleted', desc: 'The item has been successfully deleted from your menu.' });
+        } catch (err) {
+            console.error('Delete failed:', err);
+            setDialog({ type: 'error', title: 'Failed to Delete Item', desc: 'We couldn\'t delete the item. Please try again.' });
+        }
     }
 
     async function toggle(item) {
