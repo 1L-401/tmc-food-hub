@@ -44,7 +44,26 @@ class InventoryController extends Controller
     {
         $owner = Auth::user();
         $items = MenuItem::where('restaurant_owner_id', $owner->id)->with('category')->get();
-        return response()->json($items);
+        
+        // Convert binary images to base64 for response
+        $response = $items->map(function ($item) {
+            $itemArray = $item->toArray();
+            if ($itemArray['image'] && !empty($itemArray['image'])) {
+                $mimeType = $this->detectMimeType($item->image);
+                $itemArray['image'] = 'data:' . $mimeType . ';base64,' . base64_encode($item->image);
+            }
+            return $itemArray;
+        });
+        
+        return response()->json($response);
+    }
+
+    private function detectMimeType($binaryData)
+    {
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $mimeType = finfo_buffer($finfo, $binaryData);
+        finfo_close($finfo);
+        return $mimeType ?: 'image/jpeg';
     }
 
     public function storeMenuItem(Request $request)
@@ -63,11 +82,10 @@ class InventoryController extends Controller
         ]);
 
         $owner = Auth::user();
-        $imagePath = $request->image;
+        $imageData = null;
 
         if ($request->hasFile('image_file')) {
-            $path = $request->file('image_file')->store('menu_items', 'public');
-            $imagePath = asset('storage/' . $path);
+            $imageData = file_get_contents($request->file('image_file')->getRealPath());
         }
 
         $item = MenuItem::create([
@@ -76,7 +94,7 @@ class InventoryController extends Controller
             'title' => $request->title,
             'description' => $request->description,
             'price' => $request->price,
-            'image' => $imagePath,
+            'image' => $imageData,
             'available' => $request->auto_toggle ? $request->stock_level > 0 : true,
             'stock_level' => $request->stock_level,
             'min_threshold' => $request->min_threshold,
@@ -84,7 +102,14 @@ class InventoryController extends Controller
             'auto_toggle' => $request->auto_toggle,
         ]);
 
-        return response()->json($item, 201);
+        // Prepare response with base64 encoded image
+        $response = $item->toArray();
+        if ($response['image'] && !empty($response['image'])) {
+            $mimeType = $this->detectMimeType($item->image);
+            $response['image'] = 'data:' . $mimeType . ';base64,' . base64_encode($item->image);
+        }
+
+        return response()->json($response, 201);
     }
 
     public function updateMenuItem(Request $request, $id)
@@ -106,11 +131,10 @@ class InventoryController extends Controller
             'auto_toggle' => 'boolean',
         ]);
 
-        $data = $request->except(['image_file']);
+        $data = $request->except(['image_file', 'image']);
         
         if ($request->hasFile('image_file')) {
-            $path = $request->file('image_file')->store('menu_items', 'public');
-            $data['image'] = asset('storage/' . $path);
+            $data['image'] = file_get_contents($request->file('image_file')->getRealPath());
         }
 
         if ($request->has('stock_level') && $request->auto_toggle) {
@@ -119,7 +143,14 @@ class InventoryController extends Controller
 
         $item->update($data);
 
-        return response()->json($item);
+        // Prepare response with base64 encoded image
+        $response = $item->toArray();
+        if ($response['image'] && !empty($response['image'])) {
+            $mimeType = $this->detectMimeType($item->image);
+            $response['image'] = 'data:' . $mimeType . ';base64,' . base64_encode($item->image);
+        }
+
+        return response()->json($response);
     }
 
     public function updateStock(Request $request, $id)
